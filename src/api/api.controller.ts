@@ -71,7 +71,7 @@ export class ApiController {
   }
 
   @Post('/txs')
-  async getTransactions(): Promise<Response<any>> {}
+  async getTransactionsList(): Promise<Response<any>> {}
 
   // Send funds
   @Post('/create_transfer')

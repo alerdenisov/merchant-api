@@ -217,7 +217,7 @@ export class CreateTransactionResponse {
   public qrcode_url: string;
 }
 
-export class CallbackADdressResponse {
+export class CallbackAddressResponse {
   @ApiModelProperty({
     description:
       'The address to deposit the selected coin into your CoinPayments Wallet.',

@@ -32,7 +32,7 @@ import {
   GetBalancesResponse,
   GetDepositAddressResponse,
   CreateTransactionResponse,
-  CallbackADdressResponse,
+  CallbackAddressResponse,
 } from './dto/responses';
 import { AuthenticationError, ValidationApiError } from './dto/errors';
 
@@ -141,7 +141,7 @@ const apiSchema: { [method in methods]?: MethodSchema } = {
     ok: {
       description:
         'Callback address has been successefully created and stored in database',
-      type: CallbackADdressResponse,
+      type: CallbackAddressResponse,
     },
   },
 };

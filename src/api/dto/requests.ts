@@ -80,3 +80,23 @@ export class CreateTransactionRequest {
   })
   custom: string[];
 }
+
+export class CallbackAddressRequest {
+  @ApiModelProperty({
+    description:
+      'The currency the buyer will be sending. For example if your products are priced in USD but you are receiving MNC, you would use currency=MNC and convertion=MUSD',
+    required: true,
+  })
+  public currency: string;
+  @ApiModelProperty({
+    description:
+      'URL for your IPN callbacks. If not set it will use the IPN URL in your Edit Settings page if you have one set',
+    required: false,
+  })
+  public ipn?: string;
+  @ApiModelProperty({
+    description: 'Optionally sets the address label',
+    required: false,
+  })
+  public label?: string;
+}

@@ -6,6 +6,7 @@ export class GetRatesRequest {
     default: false,
     description:
       "If set to `true`, the response won't include the full coin names and number of confirms needed to save bandwidth",
+    required: false,
   })
   public short: boolean;
 
@@ -13,6 +14,7 @@ export class GetRatesRequest {
     description:
       'If set to true, the response will include if you have the coin enabled for acceptance on your Coin Acceptance Settings page.',
     default: false,
+    required: false,
   })
   public accept: boolean;
 }
@@ -22,6 +24,7 @@ export class GetBalancesRequest {
     default: false,
     description:
       'If set to `true`, the response will include all coins, even those with a 0 balance.',
+    required: false,
   })
   public all: boolean;
 }

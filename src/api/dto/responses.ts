@@ -216,3 +216,19 @@ export class CreateTransactionResponse {
   })
   public qrcode_url: string;
 }
+
+export class CallbackADdressResponse {
+  @ApiModelProperty({
+    description:
+      'The address to deposit the selected coin into your CoinPayments Wallet.',
+    required: true,
+  })
+  public address: string;
+
+  @ApiModelProperty({
+    description:
+      'For currencies needing a destination tag, payment ID, etc. (like Ripple or Monero) to set for depositing into your merchant wallet',
+    required: false,
+  })
+  public tag: string;
+}

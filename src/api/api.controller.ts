@@ -32,6 +32,7 @@ import {
   GetBalancesResponse,
   GetDepositAddressResponse,
   CreateTransactionResponse,
+  CallbackADdressResponse,
 } from './dto/responses';
 import { AuthenticationError, ValidationApiError } from './dto/errors';
 
@@ -129,6 +130,18 @@ const apiSchema: { [method in methods]?: MethodSchema } = {
     ok: {
       description: 'Transaction repeipt has been successefully created',
       type: CreateTransactionResponse,
+    },
+  },
+  getCallbackAddress: {
+    operation: {
+      title: 'Get Callback Address',
+      description:
+        "Returns fresh address to send funds and track it.  Since callback addresses are designed for commercial use they incur the same 0.5% fee on deposits as transactions created with 'create_transaction'. For personal use deposits that reuse the same personal address(es) in your wallet that have no fee but don't send IPNs see 'get_deposit_address'",
+    },
+    ok: {
+      description:
+        'Callback address has been successefully created and stored in database',
+      type: CallbackADdressResponse,
     },
   },
 };

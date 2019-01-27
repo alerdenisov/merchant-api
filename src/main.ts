@@ -1,6 +1,12 @@
+// setup env vars before go
+import { config } from 'dotenv';
+config();
+
 import { NestFactory } from '@nestjs/core';
 import { ApiModule } from './api/api.module';
 import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
+import { IsInt, validate, validateOrReject } from 'class-validator';
+import * as joi from 'joi';
 
 declare const module: any;
 
@@ -9,6 +15,14 @@ const packageJson: {
 } = require('../package.json');
 
 async function bootstrap() {
+  joi.validate(process.env, {
+    NODE_ENV: joi
+      .string()
+      .valid(['development', 'test', 'production'])
+      .default('development'),
+    PORT: joi.number().default(3000),
+  });
+
   const app = await NestFactory.create(ApiModule);
 
   const options = new DocumentBuilder()

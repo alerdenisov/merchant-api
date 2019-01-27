@@ -152,3 +152,67 @@ export class GetBalancesResponse {
   })
   balances: BalanceResponse[];
 }
+
+export class GetDepositAddressResponse {
+  @ApiModelProperty({
+    description:
+      'The address to deposit the selected coin into your merchant wallet',
+    required: true,
+  })
+  public address: string;
+
+  @ApiModelProperty({
+    description:
+      'For currencies needing a destination tag, payment ID, etc. (like Ripple or Monero) to set for depositing into your merchant wallet',
+    required: false,
+  })
+  public tag: string;
+}
+
+export class CreateTransactionResponse {
+  @ApiModelProperty({
+    description: 'The amount for the buyer to send in the destination currency',
+    required: true,
+  })
+  @IsNumberString()
+  public amount: string;
+
+  @ApiModelProperty({
+    description: 'The address the buyer needs to send the coins to',
+    required: true,
+  })
+  public address: string;
+
+  @ApiModelProperty({
+    description: 'Internal transaction ID',
+    required: true,
+  })
+  public txid: string;
+
+  @ApiModelProperty({
+    description:
+      'The number of confirms needed for the transaction to be complete',
+    required: true,
+  })
+  public confirms_needed: number;
+
+  @ApiModelProperty({
+    description:
+      'How long the buyer has to send the coins and have them be confirmed in seconds.',
+    required: true,
+  })
+  public timeout: number;
+  @ApiModelProperty({
+    description:
+      'URL where the buyer can view the payment progress and leave feedback for you',
+    required: true,
+  })
+  public status_url: string;
+
+  @ApiModelProperty({
+    description:
+      "A URL to a QR code you can display for buyer's paying with a QR supporting wallet",
+    required: true,
+  })
+  public qrcode_url: string;
+}

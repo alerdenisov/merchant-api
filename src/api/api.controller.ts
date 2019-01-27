@@ -30,6 +30,8 @@ import {
   GetBasicInfoResponse,
   GetRatesResponse,
   GetBalancesResponse,
+  GetDepositAddressResponse,
+  CreateTransactionResponse,
 } from './dto/responses';
 import { AuthenticationError, ValidationApiError } from './dto/errors';
 
@@ -107,6 +109,28 @@ const apiSchema: { [method in methods]?: MethodSchema } = {
       type: GetBalancesResponse,
     },
   },
+  getDepositAddress: {
+    operation: {
+      title: 'Get Deposit Address',
+      description:
+        "Addresses returned by this API are for personal use deposits and reuse the same personal address(es) in your wallet. Deposits to these addresses don't send IPNs. For commercial-use addresses and/or ones that send IPNs see 'get_callback_address'.",
+    },
+    ok: {
+      description: 'The address has been successefully received or generated',
+      type: GetDepositAddressResponse,
+    },
+  },
+  createTransaction: {
+    operation: {
+      title: 'Create Transaction',
+      description:
+        "This API is for making your own custom checkout page so buyers don't have to leave your website to complete payment",
+    },
+    ok: {
+      description: 'Transaction repeipt has been successefully created',
+      type: CreateTransactionResponse,
+    },
+  },
 };
 
 @Controller('api')
@@ -146,13 +170,21 @@ export class ApiController {
     return null;
   }
 
+  @ApiOperation(apiSchema.getDepositAddress.operation)
+  @ApiOkResponse(apiSchema.getDepositAddress.ok)
+  @ApiForbiddenResponse(
+    apiSchema.getDepositAddress.forbidden || defaultForbidden,
+  )
+  @ApiBadRequestResponse(
+    apiSchema.getDepositAddress.badRequest || defaultBadRequest,
+  )
+  @ApiImplicitHeaders(apiSchema.getDepositAddress.headers || defaultHeaders)
   @Post('/deposit_address')
   async getDepositAddress(@Body() dto: GetDepositAddress): Response<any> {
     return null;
   }
 
   // Receive payments
-
   @Post('/create_transaction')
   async createTransaction(
     @Body() dto: CreateTransactionRequest,

@@ -11,6 +11,8 @@ import {
   GetTransactionsListRequest,
   CreateTransferRequest,
   CreateWithdrawalRequest,
+  CreateWithdrawalBulkRequest,
+  GetWithdrawalHistoryRequest,
 } from './dto/requests';
 
 type Response<T> = T | null | Error;
@@ -92,9 +94,17 @@ export class ApiController {
   ): Promise<Response<any>> {
     return null;
   }
+  @Post('/create_withdrawals')
+  async createWithdrawalBulk(
+    @Body() dto: CreateWithdrawalBulkRequest,
+  ): Promise<Response<any>> {
+    return null;
+  }
 
   @Post('/withdrawal_history')
-  async getWithdrawalHistory(): Promise<Response<any>> {
+  async getWithdrawalHistory(
+    @Body() dto: GetWithdrawalHistoryRequest,
+  ): Promise<Response<any>> {
     return null;
   }
 

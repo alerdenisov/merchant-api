@@ -263,3 +263,18 @@ export class CreateWithdrawalRequest {
   })
   custom: string[];
 }
+
+export class CreateWithdrawalBulkRequest {
+  @ApiModelProperty({
+    description:
+      'The withdrawals are passed in an associative array called wd (max count: 100)',
+    required: true,
+    isArray: true,
+    minItems: 1,
+    maxItems: 100,
+    type: [CreateWithdrawalRequest],
+  })
+  public wd: CreateWithdrawalRequest[];
+}
+
+export class GetWithdrawalHistoryRequest extends PaginatedRequest {}

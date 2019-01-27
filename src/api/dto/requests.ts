@@ -1,5 +1,12 @@
 import { ApiModelProperty } from '@nestjs/swagger';
-import { Min, IsInt, validate } from 'class-validator';
+import {
+  Min,
+  IsInt,
+  validate,
+  IsNumberString,
+  Validate,
+  IsIn,
+} from 'class-validator';
 
 class BaseApiRequest {
   @ApiModelProperty({
@@ -97,6 +104,7 @@ export class GetDepositAddress extends BaseApiRequest {
     description: 'The currency the buyer will be sending.',
     required: true,
   })
+  @IsIn(process.env.CURRENCIES)
   public currency: string;
 }
 
@@ -105,16 +113,16 @@ export class CreateTransactionRequest extends BaseApiRequest {
     description:
       'The amount of the transaction in the original currency (currency1 below).',
     required: true,
-    minimum: 0.001,
   })
-  @Min(0.001)
-  public amount: number;
+  @IsNumberString()
+  public amount: string;
 
   @ApiModelProperty({
     description:
       'The currency the buyer will be sending. For example if your products are priced in USD but you are receiving MNC, you would use currency=MNC and convertion=MUSD',
     required: true,
   })
+  @IsIn(process.env.CURRENCIES)
   public currency: string;
 
   @ApiModelProperty({
@@ -122,6 +130,7 @@ export class CreateTransactionRequest extends BaseApiRequest {
       'The currency what will be add to your balance after automatic conversion',
     required: false,
   })
+  @IsIn(process.env.CURRENCIES)
   public convertion?: string;
 
   @ApiModelProperty({
@@ -153,6 +162,7 @@ export class CallbackAddressRequest extends BaseApiRequest {
       'The currency the buyer will be sending. For example if your products are priced in USD but you are receiving MNC, you would use currency=MNC and convertion=MUSD',
     required: true,
   })
+  @IsIn(process.env.CURRENCIES)
   public currency: string;
   @ApiModelProperty({
     description:
@@ -213,12 +223,14 @@ export class CreateTransferRequest extends BaseApiRequest {
     required: true,
     minimum: 0.001,
   })
-  public amount: number;
+  @IsNumberString()
+  public amount: string;
 
   @ApiModelProperty({
     description: 'The cryptocurrency to withdraw. (MNC, MUSD, etc.)',
     required: true,
   })
+  @IsIn(process.env.CURRENCIES)
   public currency: string;
 
   @ApiModelProperty({
@@ -241,9 +253,9 @@ export class CreateWithdrawalRequest extends BaseApiRequest {
   @ApiModelProperty({
     description: 'The amount of the transfer in the currency below.',
     required: true,
-    minimum: 0.001,
   })
-  public amount: number;
+  @IsNumberString()
+  public amount: string;
 
   @ApiModelProperty({
     description:
@@ -257,6 +269,7 @@ export class CreateWithdrawalRequest extends BaseApiRequest {
     description: 'The cryptocurrency to withdraw. (MNC, MUSD, etc.)',
     required: true,
   })
+  @IsIn(process.env.CURRENCIES)
   public currency: string;
 
   @ApiModelProperty({

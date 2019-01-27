@@ -35,6 +35,7 @@ import {
   CallbackAddressResponse,
   CreateTransferResponse,
   CreateWithdrawalResponse,
+  WithdrawalInfoResponse,
 } from './dto/responses';
 import { AuthenticationError, ValidationApiError } from './dto/errors';
 
@@ -204,6 +205,26 @@ const apiSchema: { [method in methods]?: MethodSchema } = {
       type: CreateWithdrawalResponse,
     },
   },
+
+  getWithdrawalHistory: {
+    operation: {
+      title: 'Get Withdrawal History',
+      description: 'Returns paginated list of historical withdrawals',
+    },
+    ok: {
+      isArray: true,
+      type: WithdrawalInfoResponse,
+    },
+  },
+
+  getWithdrawalInfo: {
+    operation: {
+      title: 'Get Withdrawal Information',
+    },
+    ok: {
+      type: WithdrawalInfoResponse,
+    },
+  },
 };
 
 @Controller('api')
@@ -229,7 +250,7 @@ export class ApiController {
   @ApiBadRequestResponse(apiSchema.getRates.badRequest || defaultBadRequest)
   @ApiImplicitHeaders(apiSchema.getRates.headers || defaultHeaders)
   @Post('/rates')
-  async getRates(@Body() dto: GetRatesRequest): Response<any> {
+  async getRates(@Body() dto: GetRatesRequest): Response<GetRatesResponse> {
     return null;
   }
 
@@ -239,7 +260,9 @@ export class ApiController {
   @ApiBadRequestResponse(apiSchema.getBalances.badRequest || defaultBadRequest)
   @ApiImplicitHeaders(apiSchema.getBalances.headers || defaultHeaders)
   @Post('/balances')
-  async getBalances(@Body() dto: GetBalancesRequest): Response<any> {
+  async getBalances(
+    @Body() dto: GetBalancesRequest,
+  ): Response<GetBalancesResponse> {
     return null;
   }
 
@@ -377,6 +400,15 @@ export class ApiController {
     return null;
   }
 
+  @ApiOperation(apiSchema.getWithdrawalHistory.operation)
+  @ApiOkResponse(apiSchema.getWithdrawalHistory.ok)
+  @ApiForbiddenResponse(
+    apiSchema.getWithdrawalHistory.forbidden || defaultForbidden,
+  )
+  @ApiBadRequestResponse(
+    apiSchema.getWithdrawalHistory.badRequest || defaultBadRequest,
+  )
+  @ApiImplicitHeaders(apiSchema.getWithdrawalHistory.headers || defaultHeaders)
   @Post('/withdrawal_history')
   async getWithdrawalHistory(
     @Body() dto: GetWithdrawalHistoryRequest,
@@ -384,6 +416,15 @@ export class ApiController {
     return null;
   }
 
+  @ApiOperation(apiSchema.getWithdrawalInfo.operation)
+  @ApiOkResponse(apiSchema.getWithdrawalInfo.ok)
+  @ApiForbiddenResponse(
+    apiSchema.getWithdrawalInfo.forbidden || defaultForbidden,
+  )
+  @ApiBadRequestResponse(
+    apiSchema.getWithdrawalInfo.badRequest || defaultBadRequest,
+  )
+  @ApiImplicitHeaders(apiSchema.getWithdrawalInfo.headers || defaultHeaders)
   @Post('/withdrawal_info')
   async getWithdrawalInfo(
     @Body() dto: GetWithdrawalInfoRequest,

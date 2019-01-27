@@ -242,9 +242,11 @@ export class CreateTransferResponse {
   public id: string;
 
   @ApiModelProperty({
-    description: 'Waiting confirmation status',
+    description: 'Withdrawal status',
+    enum: ['cancelled', 'email_confirmation', 'pending', 'complete'],
+    required: true,
   })
-  public need_confirm: boolean;
+  public status: string;
 }
 
 export class CreateWithdrawalResponse {
@@ -256,9 +258,11 @@ export class CreateWithdrawalResponse {
   public id: string;
 
   @ApiModelProperty({
-    description: 'Waiting confirmation status',
+    description: 'Withdrawal status',
+    enum: ['cancelled', 'email_confirmation', 'pending', 'complete'],
+    required: true,
   })
-  public need_confirm: boolean;
+  public status: string;
 
   @ApiModelProperty({
     description: 'Amount of coins is sending with withdrawal',
@@ -266,4 +270,67 @@ export class CreateWithdrawalResponse {
   })
   @IsNumberString()
   amount: string;
+}
+
+export class WithdrawalInfoResponse {
+  @ApiModelProperty({
+    description:
+      'Internal transfer/withdrawal ID. (This is not a coin network TX ID.)',
+    required: true,
+  })
+  public id: string;
+
+  @ApiModelProperty({
+    description: 'Unix timestamp of creation time',
+    required: true,
+  })
+  public time_created: number;
+
+  @ApiModelProperty({
+    description: 'Withdrawal status',
+    enum: ['cancelled', 'email_confirmation', 'pending', 'complete'],
+    required: true,
+  })
+  public status: string;
+
+  @ApiModelProperty({
+    description: 'The ticker symbol of the coin for the withdrawal',
+    required: true,
+  })
+  @IsIn(process.env.CURRENCIES)
+  public currency: string;
+
+  @ApiModelProperty({
+    description: ' The amount of the withdrawal (in Satoshis)',
+    required: true,
+  })
+  @IsNumberString()
+  public real_amount: string;
+
+  @ApiModelProperty({
+    description: 'The amount of the withdrawal (as a floating point number)',
+    required: true,
+  })
+  public amount: number;
+
+  @ApiModelProperty({
+    description:
+      'The address the withdrawal was sent to. (only in response if status is completed)',
+    required: false,
+  })
+  public send_address?: string;
+
+  @ApiModelProperty({
+    description:
+      'The destination tag/payment ID/etc. the withdrawal was sent to. (only in response if coin supports destination tags/payment IDs/etc.)',
+    required: false,
+  })
+  public send_dest_tag?: string;
+
+  @ApiModelProperty({
+    description:
+      'The coin TX ID of the send. (only in response if status is completed)',
+    required: false,
+  })
+  public send_txid?: string;
 }

@@ -6,6 +6,8 @@ import {
   GetDepositAddress,
 } from './dto/requests';
 
+type Response<T> = T | null | Error;
+
 @Controller('api')
 export class ApiController {
   constructor(private readonly apiService: ApiService) {}
@@ -13,68 +15,70 @@ export class ApiController {
   // Info
 
   @Post('/basic_info')
-  getBasicInfo() {
+  async getBasicInfo(): Promise<Response<any>> {
     return null;
   }
 
   @Post('/rates')
-  getRates(@Body() dto: GetRatesRequest) {
+  async getRates(@Body() dto: GetRatesRequest): Promise<Response<any>> {
     return null;
   }
 
   @Post('/balances')
-  getBalances(@Body() dto: GetBalancesRequest) {
+  async getBalances(@Body() dto: GetBalancesRequest): Promise<Response<any>> {
     return null;
   }
 
   @Post('/deposit_address')
-  getDepositAddress(@Body() dto: GetDepositAddress) {
+  async getDepositAddress(
+    @Body() dto: GetDepositAddress,
+  ): Promise<Response<any>> {
     return null;
   }
 
   // Receive payments
 
   @Post('/create_transaction')
-  createTransaction() {
+  async createTransaction(): Promise<Response<any>> {
     return null;
   }
 
   @Post('/callback_address')
-  getCallbackAddress() {
+  async getCallbackAddress(): Promise<Response<any>> {
     return null;
   }
 
   @Post('/tx_info')
-  getTransactionInfo() {
+  async getTransactionInfo(): Promise<Response<any>> {
     return null;
   }
 
   @Post('/txs_info')
-  getTransactionsInfo() {
+  async getTransactionsInfo(): Promise<Response<any>> {
     return null;
   }
 
   @Post('/txs')
-  getTransactions() {}
+  async getTransactions(): Promise<Response<any>> {}
 
   // Send funds
   @Post('/create_transfer')
-  createTransfer() {
+  async createTransfer(): Promise<Response<any>> {
     return null;
   }
 
   @Post('/create_withdrawal')
-  createWithdrawal() {
+  async createWithdrawal(): Promise<Response<any>> {
     return null;
   }
 
   @Post('/withdrawal_history')
-  getWithdrawalHistory() {
+  async getWithdrawalHistory(): Promise<Response<any>> {
     return null;
   }
 
   @Post('/withdrawal_info')
-  getWithdrawalInfo() {
+  async getWithdrawalInfo(): Promise<Response<any>> {
     return null;
   }
 }

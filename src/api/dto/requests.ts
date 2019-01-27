@@ -204,3 +204,62 @@ export class CreateTransferRequest {
   })
   public auto_confirm: boolean;
 }
+
+export class CreateWithdrawalRequest {
+  @ApiModelProperty({
+    description: 'The amount of the transfer in the currency below.',
+    required: true,
+    minimum: 0.001,
+  })
+  public amount: number;
+
+  @ApiModelProperty({
+    description:
+      'If set to `true`, add the coin TX fee to the withdrawal amount so the sender pays the TX fee instead of the receiver',
+    required: false,
+    default: false,
+  })
+  public add_tx_fee: boolean;
+
+  @ApiModelProperty({
+    description: 'The cryptocurrency to withdraw. (MNC, MUSD, etc.)',
+    required: true,
+  })
+  public currency: string;
+
+  @ApiModelProperty({
+    description:
+      'The address or merchant ID or $PayByName to send the funds to',
+    required: true,
+  })
+  public receiver: string;
+
+  @ApiModelProperty({
+    description:
+      'If set to 1, withdrawal will complete without 2FA confirmation',
+    required: false,
+    default: false,
+  })
+  public auto_confirm: boolean;
+
+  @ApiModelProperty({
+    description:
+      'URL for your IPN callbacks. If not set it will use the IPN URL in your Edit Settings page if you have one set',
+    required: false,
+  })
+  public ipn?: string;
+
+  @ApiModelProperty({
+    description: 'Optionally sets the label for a withdrawal',
+    required: false,
+  })
+  public label?: string;
+
+  @ApiModelProperty({
+    isArray: true,
+    description:
+      'Array of fields for your use, will be on the payment information page and in the IPNs for the transaction.',
+    required: false,
+  })
+  custom: string[];
+}

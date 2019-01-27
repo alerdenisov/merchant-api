@@ -10,6 +10,7 @@ import {
   GetTransactionsInfoRequest,
   GetTransactionsListRequest,
   CreateTransferRequest,
+  CreateWithdrawalRequest,
 } from './dto/requests';
 
 type Response<T> = T | null | Error;
@@ -86,7 +87,9 @@ export class ApiController {
   }
 
   @Post('/create_withdrawal')
-  async createWithdrawal(): Promise<Response<any>> {
+  async createWithdrawal(
+    @Body() dto: CreateWithdrawalRequest,
+  ): Promise<Response<any>> {
     return null;
   }
 

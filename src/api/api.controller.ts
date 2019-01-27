@@ -26,7 +26,11 @@ import {
   ResponseMetadata,
   ApiImplicitHeaders,
 } from '@nestjs/swagger';
-import { GetBasicInfoResponse, GetRatesResponse } from './dto/responses';
+import {
+  GetBasicInfoResponse,
+  GetRatesResponse,
+  GetBalancesResponse,
+} from './dto/responses';
 import { AuthenticationError, ValidationApiError } from './dto/errors';
 
 type Response<T> = Promise<T>;
@@ -71,7 +75,7 @@ const defaultHeaders = [
   },
 ];
 
-const apiSchema: { [method in methods]: MethodSchema } = {
+const apiSchema: { [method in methods]?: MethodSchema } = {
   getBasicInfo: {
     operation: {
       title: 'Get basic account information',
@@ -91,6 +95,16 @@ const apiSchema: { [method in methods]: MethodSchema } = {
     ok: {
       description: 'The list of coin has been successefully received',
       type: GetRatesResponse,
+    },
+  },
+  getBalances: {
+    operation: {
+      title: 'Coins Balances',
+      description: 'Returns list of available balances',
+    },
+    ok: {
+      description: 'The list of balances has been successefully received',
+      type: GetBalancesResponse,
     },
   },
 };
@@ -122,6 +136,11 @@ export class ApiController {
     return null;
   }
 
+  @ApiOperation(apiSchema.getBalances.operation)
+  @ApiOkResponse(apiSchema.getBalances.ok)
+  @ApiForbiddenResponse(apiSchema.getBalances.forbidden || defaultForbidden)
+  @ApiBadRequestResponse(apiSchema.getBalances.badRequest || defaultBadRequest)
+  @ApiImplicitHeaders(apiSchema.getBalances.headers || defaultHeaders)
   @Post('/balances')
   async getBalances(@Body() dto: GetBalancesRequest): Response<any> {
     return null;

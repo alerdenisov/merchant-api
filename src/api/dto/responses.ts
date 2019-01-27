@@ -1,4 +1,5 @@
 import { ApiModelProperty } from '@nestjs/swagger';
+import { IsNumberString, IsIn } from 'class-validator';
 
 export class GetBasicInfoResponse {
   @ApiModelProperty({
@@ -33,6 +34,12 @@ export class CurrencyResponse {
     required: true,
   })
   public symbol: string;
+
+  @ApiModelProperty({
+    description: 'Currency decimal points',
+    required: true,
+  })
+  public decimals: number;
 
   @ApiModelProperty({
     description: 'Currency is fiat flag',
@@ -109,8 +116,39 @@ export class CurrencyResponse {
 export class GetRatesResponse {
   @ApiModelProperty({
     isArray: true,
-    type: [CurrencyResponse],
+    type: CurrencyResponse,
     required: true,
   })
   public list: Array<CurrencyResponse>;
+}
+
+export class BalanceResponse {
+  @ApiModelProperty({
+    description: "The coin balance as an integer in 'Satoshis'",
+    required: true,
+  })
+  @IsNumberString()
+  public real_balance: string;
+
+  @ApiModelProperty({
+    description: 'The coin balance as floating number (possible float error)',
+    required: true,
+  })
+  public balance: number;
+
+  @ApiModelProperty({
+    description: 'The coint balance symbol',
+    required: true,
+  })
+  @IsIn(process.env.CURRENCIES)
+  public currency: string;
+}
+
+export class GetBalancesResponse {
+  @ApiModelProperty({
+    isArray: true,
+    type: BalanceResponse,
+    required: true,
+  })
+  balances: BalanceResponse[];
 }

@@ -6,6 +6,7 @@ import {
   GetDepositAddress,
   CreateTransactionRequest,
   CallbackAddressRequest,
+  GetTransactionInfoRequest,
 } from './dto/requests';
 
 type Response<T> = T | null | Error;
@@ -55,7 +56,9 @@ export class ApiController {
   }
 
   @Post('/tx_info')
-  async getTransactionInfo(): Promise<Response<any>> {
+  async getTransactionInfo(
+    @Body() dto: GetTransactionInfoRequest,
+  ): Promise<Response<any>> {
     return null;
   }
 

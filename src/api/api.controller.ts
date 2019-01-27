@@ -9,6 +9,7 @@ import {
   GetTransactionInfoRequest,
   GetTransactionsInfoRequest,
   GetTransactionsListRequest,
+  CreateTransferRequest,
 } from './dto/requests';
 
 type Response<T> = T | null | Error;
@@ -78,7 +79,9 @@ export class ApiController {
 
   // Send funds
   @Post('/create_transfer')
-  async createTransfer(): Promise<Response<any>> {
+  async createTransfer(
+    @Body() dto: CreateTransferRequest,
+  ): Promise<Response<any>> {
     return null;
   }
 

@@ -174,3 +174,33 @@ export class GetTransactionsListRequest extends PaginatedRequest {
   })
   public all: boolean;
 }
+
+export class CreateTransferRequest {
+  @ApiModelProperty({
+    description: 'The amount of the transfer in the currency below.',
+    required: true,
+    minimum: 0.001,
+  })
+  public amount: number;
+
+  @ApiModelProperty({
+    description: 'The cryptocurrency to withdraw. (MNC, MUSD, etc.)',
+    required: true,
+  })
+  public currency: string;
+
+  @ApiModelProperty({
+    description:
+      'The merchant ID to send the funds to, either this OR pbntag must be specified \n Remember: this is a merchant ID and not a username',
+    required: true,
+  })
+  public merchant: string;
+
+  @ApiModelProperty({
+    description:
+      'If set to 1, withdrawal will complete without 2FA confirmation',
+    required: false,
+    default: false,
+  })
+  public auto_confirm: boolean;
+}

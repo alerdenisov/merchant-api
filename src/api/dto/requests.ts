@@ -107,7 +107,7 @@ export class CallbackAddressRequest {
 export class GetTransactionInfoRequest {
   @ApiModelProperty({
     description:
-      'The transaction ID to query (API key must belong to the seller.) Note: It is recommended to handle IPNs instead of using this command when possible, it is more efficient and places less load on our servers.',
+      'The transaction ID to query (API key must belong to the seller.) \nNote: It is recommended to handle IPNs instead of using this command when possible, it is more efficient and places less load on our servers.',
     required: true,
   })
   public txid: string;
@@ -119,4 +119,17 @@ export class GetTransactionInfoRequest {
     required: false,
   })
   public full: boolean;
+}
+
+export class GetTransactionsInfoRequest {
+  @ApiModelProperty({
+    description:
+      'Lets you query up to 25 transaction ID(s) (API key must belong to the seller.) \nNote: It is recommended to handle IPNs instead of using this command when possible, it is more efficient and places less load on our servers.',
+    required: true,
+    isArray: true,
+    maxItems: 25,
+    minItems: 1,
+    type: [String],
+  })
+  txid: String[];
 }

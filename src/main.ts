@@ -9,9 +9,8 @@ const packageJson: {
 } = require('../package.json');
 
 async function bootstrap() {
-  setupEnvironment();
-
-  const app = await NestFactory.create(ApplicationModule);
+  await setupEnvironment();
+  const app = await NestFactory.create(ApplicationModule.forRoot());
   console.log(typeof process.env.MICROSERVICES_RETRY_ATTEMPTS);
   app.connectMicroservice({
     transport: Transport.TCP,

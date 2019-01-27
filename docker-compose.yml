@@ -1,7 +1,7 @@
 version: '3'
 services:
   db:
-    image: mysql/mysql-server:latest
+    image: mysql/mysql-server:5.7
     restart: always
     environment:
       MYSQL_DATABASE: 'db'

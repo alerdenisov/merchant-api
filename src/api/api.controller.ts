@@ -1,4 +1,4 @@
-import { Controller, Post, Body } from '@nestjs/common';
+import { Controller, Post, Body, Get } from '@nestjs/common';
 import { ApiService } from './api.service';
 import {
   GetRatesRequest,
@@ -36,6 +36,7 @@ import {
   WithdrawalInfoResponse,
 } from './dto/responses';
 import { AuthenticationError, ValidationApiError } from './dto/errors';
+import { Client, ClientProxy, Transport } from '@nestjs/microservices';
 
 type Response<T> = Promise<T>;
 
@@ -227,7 +228,16 @@ const apiSchema: { [method in methods]?: MethodSchema } = {
 
 @Controller('api')
 export class ApiController {
+  @Client({ transport: Transport.TCP })
+  client: ClientProxy;
+
   constructor(private readonly apiService: ApiService) {}
+
+  @Get('/test')
+  async test() {
+    await this.client.connect();
+    return this.client.send({ cmd: 'findById' }, 0);
+  }
 
   // Info
   @ApiOperation(apiSchema.getBasicInfo.operation)

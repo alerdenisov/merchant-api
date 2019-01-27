@@ -8,13 +8,15 @@ import {
   IsIn,
 } from 'class-validator';
 
+const packageJson = require('../../../package.json');
+
 class BaseApiRequest {
   @ApiModelProperty({
     description: 'Api version number (default is latest)',
-    default: 1,
+    default: packageJson.version,
     required: false,
   })
-  public version: number;
+  public version: string;
 
   @ApiModelProperty({
     description: 'Merchant API public key',

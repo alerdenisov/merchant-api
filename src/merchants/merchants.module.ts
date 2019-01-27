@@ -1,18 +1,22 @@
-import { Module } from '@nestjs/common';
+import { DynamicModule, Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 
-@Module({
-  imports: [
-    TypeOrmModule.forRoot({
-      type: 'postgres',
-      host: 'localhost',
-      port: 3306,
-      username: 'root',
-      password: 'root',
-      database: 'test',
-      entities: [__dirname + '/**/*.entity{.ts,.js}'],
-      synchronize: true,
-    }),
-  ],
-})
-export class MerchantsModule {}
+export class MerchantsModule {
+  static forRoot(): DynamicModule {
+    return {
+      module: MerchantsModule,
+      imports: [
+        TypeOrmModule.forRoot({
+          type: <any>process.env.DATABASE_TYPE,
+          host: process.env.DATABASE_HOST,
+          port: process.env.DATABASE_PORT,
+          username: process.env.DATABASE_USER,
+          password: process.env.DATABASE_PASSWORD,
+          database: process.env.DATABASE_DB,
+          entities: [__dirname + '/**/*.entity{.ts,.js}'],
+          synchronize: true,
+        }),
+      ],
+    };
+  }
+}

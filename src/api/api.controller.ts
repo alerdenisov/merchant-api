@@ -4,6 +4,8 @@ import {
   GetRatesRequest,
   GetBalancesRequest,
   GetDepositAddress,
+  CreateTransactionRequest,
+  CallbackAddressRequest,
 } from './dto/requests';
 
 type Response<T> = T | null | Error;
@@ -39,12 +41,16 @@ export class ApiController {
   // Receive payments
 
   @Post('/create_transaction')
-  async createTransaction(): Promise<Response<any>> {
+  async createTransaction(
+    @Body() dto: CreateTransactionRequest,
+  ): Promise<Response<any>> {
     return null;
   }
 
   @Post('/callback_address')
-  async getCallbackAddress(): Promise<Response<any>> {
+  async getCallbackAddress(
+    @Body() dto: CallbackAddressRequest,
+  ): Promise<Response<any>> {
     return null;
   }
 

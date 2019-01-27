@@ -162,7 +162,7 @@ export class GetTransactionsInfoRequest {
     minItems: 1,
     type: [String],
   })
-  txid: String[];
+  public txid: String[];
 }
 
 export class GetTransactionsListRequest extends PaginatedRequest {

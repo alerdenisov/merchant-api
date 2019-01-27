@@ -202,7 +202,7 @@ export class GetTransactionsInfoRequest extends BaseApiRequest {
     isArray: true,
     maxItems: 25,
     minItems: 1,
-    type: [String],
+    type: String,
   })
   public txid: String[];
 }
@@ -317,7 +317,7 @@ export class CreateWithdrawalBulkRequest extends BaseApiRequest {
     isArray: true,
     minItems: 1,
     maxItems: 100,
-    type: [CreateWithdrawalRequest],
+    type: CreateWithdrawalRequest,
   })
   public wd: CreateWithdrawalRequest[];
 }

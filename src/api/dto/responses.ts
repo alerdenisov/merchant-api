@@ -110,7 +110,7 @@ export class CurrencyResponse {
     required: true,
     isArray: true,
   })
-  public capabilities: Set<'payments' | 'wallet' | 'transfers' | 'convert'>;
+  public capabilities: ['payments' | 'wallet' | 'transfers' | 'convert'];
 }
 
 export class GetRatesResponse {

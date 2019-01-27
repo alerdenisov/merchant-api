@@ -21,6 +21,7 @@ async function bootstrap() {
       .valid(['development', 'test', 'production'])
       .default('development'),
     PORT: joi.number().default(3000),
+    CURRENCIES: joi.array().required(),
   });
 
   const app = await NestFactory.create(ApiModule);

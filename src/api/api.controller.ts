@@ -34,6 +34,7 @@ import {
   CreateTransactionResponse,
   CallbackAddressResponse,
   CreateTransferResponse,
+  CreateWithdrawalResponse,
 } from './dto/responses';
 import { AuthenticationError, ValidationApiError } from './dto/errors';
 
@@ -182,6 +183,25 @@ const apiSchema: { [method in methods]?: MethodSchema } = {
     },
     ok: {
       type: CreateTransferResponse,
+    },
+  },
+
+  createWithdrawal: {
+    operation: {
+      title: 'Create Withdrawal',
+    },
+    ok: {
+      type: CreateWithdrawalResponse,
+    },
+  },
+
+  createWithdrawalBulk: {
+    operation: {
+      title: 'Create Withdrawal Bulk Order',
+    },
+    ok: {
+      isArray: true,
+      type: CreateWithdrawalResponse,
     },
   },
 };
@@ -340,10 +360,20 @@ export class ApiController {
   async createWithdrawal(@Body() dto: CreateWithdrawalRequest): Response<any> {
     return null;
   }
+
+  @ApiOperation(apiSchema.createWithdrawalBulk.operation)
+  @ApiOkResponse(apiSchema.createWithdrawalBulk.ok)
+  @ApiForbiddenResponse(
+    apiSchema.createWithdrawalBulk.forbidden || defaultForbidden,
+  )
+  @ApiBadRequestResponse(
+    apiSchema.createWithdrawalBulk.badRequest || defaultBadRequest,
+  )
+  @ApiImplicitHeaders(apiSchema.createWithdrawalBulk.headers || defaultHeaders)
   @Post('/create_withdrawals')
   async createWithdrawalBulk(
     @Body() dto: CreateWithdrawalBulkRequest,
-  ): Response<any> {
+  ): Response<CreateWithdrawalResponse[]> {
     return null;
   }
 

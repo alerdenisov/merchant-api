@@ -26,6 +26,7 @@ class BaseApiRequest {
     description:
       'The format of response to return, json, xml, grpc. (default: json)',
     default: 'json',
+    required: false,
   })
   public format: string;
 }

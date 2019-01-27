@@ -1,7 +1,36 @@
 import { ApiModelProperty } from '@nestjs/swagger';
 import { Min, IsInt, validate } from 'class-validator';
 
-class PaginatedRequest {
+class BaseApiRequest {
+  @ApiModelProperty({
+    description: 'Api version number (default is latest)',
+    default: 1,
+    required: false,
+  })
+  public version: number;
+
+  @ApiModelProperty({
+    description: 'Merchant API public key',
+    required: true,
+  })
+  public key: string;
+
+  @ApiModelProperty({
+    description:
+      'An integer that is always higher than in your previous API call to prevent replay attack',
+    required: true,
+  })
+  public nonce: number;
+
+  @ApiModelProperty({
+    description:
+      'The format of response to return, json, xml, grpc. (default: json)',
+    default: 'json',
+  })
+  public format: string;
+}
+
+class PaginatedRequest extends BaseApiRequest {
   @ApiModelProperty({
     type: Number,
     required: false,
@@ -32,7 +61,7 @@ class PaginatedRequest {
   public newer: number;
 }
 
-export class GetRatesRequest {
+export class GetRatesRequest extends BaseApiRequest {
   @ApiModelProperty({
     default: false,
     description:
@@ -50,7 +79,7 @@ export class GetRatesRequest {
   public accept: boolean;
 }
 
-export class GetBalancesRequest {
+export class GetBalancesRequest extends BaseApiRequest {
   @ApiModelProperty({
     default: false,
     description:
@@ -60,7 +89,7 @@ export class GetBalancesRequest {
   public all: boolean;
 }
 
-export class GetDepositAddress {
+export class GetDepositAddress extends BaseApiRequest {
   @ApiModelProperty({
     description: 'The currency the buyer will be sending.',
     required: true,
@@ -68,7 +97,7 @@ export class GetDepositAddress {
   public currency: string;
 }
 
-export class CreateTransactionRequest {
+export class CreateTransactionRequest extends BaseApiRequest {
   @ApiModelProperty({
     description:
       'The amount of the transaction in the original currency (currency1 below).',
@@ -115,7 +144,7 @@ export class CreateTransactionRequest {
   custom: string[];
 }
 
-export class CallbackAddressRequest {
+export class CallbackAddressRequest extends BaseApiRequest {
   @ApiModelProperty({
     description:
       'The currency the buyer will be sending. For example if your products are priced in USD but you are receiving MNC, you would use currency=MNC and convertion=MUSD',
@@ -135,7 +164,7 @@ export class CallbackAddressRequest {
   public label?: string;
 }
 
-export class GetTransactionInfoRequest {
+export class GetTransactionInfoRequest extends BaseApiRequest {
   @ApiModelProperty({
     description:
       'The transaction ID to query (API key must belong to the seller.) \nNote: It is recommended to handle IPNs instead of using this command when possible, it is more efficient and places less load on our servers.',
@@ -152,7 +181,7 @@ export class GetTransactionInfoRequest {
   public full: boolean;
 }
 
-export class GetTransactionsInfoRequest {
+export class GetTransactionsInfoRequest extends BaseApiRequest {
   @ApiModelProperty({
     description:
       'Lets you query up to 25 transaction ID(s) (API key must belong to the seller.) \nNote: It is recommended to handle IPNs instead of using this command when possible, it is more efficient and places less load on our servers.',
@@ -175,7 +204,7 @@ export class GetTransactionsListRequest extends PaginatedRequest {
   public all: boolean;
 }
 
-export class CreateTransferRequest {
+export class CreateTransferRequest extends BaseApiRequest {
   @ApiModelProperty({
     description: 'The amount of the transfer in the currency below.',
     required: true,
@@ -205,7 +234,7 @@ export class CreateTransferRequest {
   public auto_confirm: boolean;
 }
 
-export class CreateWithdrawalRequest {
+export class CreateWithdrawalRequest extends BaseApiRequest {
   @ApiModelProperty({
     description: 'The amount of the transfer in the currency below.',
     required: true,
@@ -264,7 +293,7 @@ export class CreateWithdrawalRequest {
   custom: string[];
 }
 
-export class CreateWithdrawalBulkRequest {
+export class CreateWithdrawalBulkRequest extends BaseApiRequest {
   @ApiModelProperty({
     description:
       'The withdrawals are passed in an associative array called wd (max count: 100)',
@@ -279,7 +308,7 @@ export class CreateWithdrawalBulkRequest {
 
 export class GetWithdrawalHistoryRequest extends PaginatedRequest {}
 
-export class GetWithdrawalInfoRequest {
+export class GetWithdrawalInfoRequest extends BaseApiRequest {
   @ApiModelProperty({
     description: 'The withdrawal ID to query',
     required: true,

@@ -17,11 +17,9 @@ import {
   GetBaseInfoRequest,
 } from './dto/requests';
 import {
-  ApiResponse,
   ApiOkResponse,
   ApiOperation,
   ApiForbiddenResponse,
-  ApiImplicitHeader,
   ApiBadRequestResponse,
   ResponseMetadata,
   ApiImplicitHeaders,

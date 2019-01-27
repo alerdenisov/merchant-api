@@ -164,3 +164,13 @@ export class GetTransactionsInfoRequest {
   })
   txid: String[];
 }
+
+export class GetTransactionsListRequest extends PaginatedRequest {
+  @ApiModelProperty({
+    description:
+      'By default we return an array of TX IDs where you are the seller for use with get_tx_info_multi or get_tx_info. If all is set to `true` returns an array with TX IDs and whether you are the seller or buyer for the transaction.',
+    default: false,
+    required: false,
+  })
+  public all: boolean;
+}

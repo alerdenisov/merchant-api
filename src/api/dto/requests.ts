@@ -99,7 +99,7 @@ export class GetBalancesRequest extends BaseApiRequest {
   public all: boolean;
 }
 
-export class GetDepositAddress extends BaseApiRequest {
+export class GetDepositAddressRequest extends BaseApiRequest {
   @ApiModelProperty({
     description: 'The currency the buyer will be sending.',
     required: true,

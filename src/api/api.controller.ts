@@ -3,7 +3,7 @@ import { ApiService } from './api.service';
 import {
   GetRatesRequest,
   GetBalancesRequest,
-  GetDepositAddress,
+  GetDepositAddressRequest,
   CreateTransactionRequest,
   CallbackAddressRequest,
   GetTransactionInfoRequest,
@@ -276,7 +276,9 @@ export class ApiController {
   )
   @ApiImplicitHeaders(apiSchema.getDepositAddress.headers || defaultHeaders)
   @Post('/deposit_address')
-  async getDepositAddress(@Body() dto: GetDepositAddress): Response<any> {
+  async getDepositAddress(
+    @Body() dto: GetDepositAddressRequest,
+  ): Response<GetDepositAddressResponse> {
     return null;
   }
 
@@ -292,7 +294,7 @@ export class ApiController {
   @Post('/create_transaction')
   async createTransaction(
     @Body() dto: CreateTransactionRequest,
-  ): Response<any> {
+  ): Response<CreateTransactionResponse> {
     return null;
   }
 
@@ -306,7 +308,9 @@ export class ApiController {
   )
   @ApiImplicitHeaders(apiSchema.getCallbackAddress.headers || defaultHeaders)
   @Post('/callback_address')
-  async getCallbackAddress(@Body() dto: CallbackAddressRequest): Response<any> {
+  async getCallbackAddress(
+    @Body() dto: CallbackAddressRequest,
+  ): Response<CallbackAddressResponse> {
     return null;
   }
 
@@ -366,7 +370,9 @@ export class ApiController {
   )
   @ApiImplicitHeaders(apiSchema.createTransfer.headers || defaultHeaders)
   @Post('/create_transfer')
-  async createTransfer(@Body() dto: CreateTransferRequest): Response<any> {
+  async createTransfer(
+    @Body() dto: CreateTransferRequest,
+  ): Response<CreateTransactionResponse> {
     return null;
   }
 
@@ -380,7 +386,9 @@ export class ApiController {
   )
   @ApiImplicitHeaders(apiSchema.createWithdrawal.headers || defaultHeaders)
   @Post('/create_withdrawal')
-  async createWithdrawal(@Body() dto: CreateWithdrawalRequest): Response<any> {
+  async createWithdrawal(
+    @Body() dto: CreateWithdrawalRequest,
+  ): Response<CreateWithdrawalResponse> {
     return null;
   }
 
@@ -412,7 +420,7 @@ export class ApiController {
   @Post('/withdrawal_history')
   async getWithdrawalHistory(
     @Body() dto: GetWithdrawalHistoryRequest,
-  ): Response<any> {
+  ): Response<WithdrawalInfoResponse> {
     return null;
   }
 
@@ -428,7 +436,7 @@ export class ApiController {
   @Post('/withdrawal_info')
   async getWithdrawalInfo(
     @Body() dto: GetWithdrawalInfoRequest,
-  ): Response<any> {
+  ): Response<WithdrawalInfoResponse[]> {
     return null;
   }
 }

@@ -327,6 +327,15 @@ export class ApiController {
     return null;
   }
 
+  @ApiOperation(apiSchema.createWithdrawal.operation)
+  @ApiOkResponse(apiSchema.createWithdrawal.ok)
+  @ApiForbiddenResponse(
+    apiSchema.createWithdrawal.forbidden || defaultForbidden,
+  )
+  @ApiBadRequestResponse(
+    apiSchema.createWithdrawal.badRequest || defaultBadRequest,
+  )
+  @ApiImplicitHeaders(apiSchema.createWithdrawal.headers || defaultHeaders)
   @Post('/create_withdrawal')
   async createWithdrawal(@Body() dto: CreateWithdrawalRequest): Response<any> {
     return null;

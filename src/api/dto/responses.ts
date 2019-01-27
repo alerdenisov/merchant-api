@@ -237,6 +237,7 @@ export class CreateTransferResponse {
   @ApiModelProperty({
     description:
       'Internal transfer/withdrawal ID. (This is not a coin network TX ID.)',
+    required: true,
   })
   public id: string;
 
@@ -244,4 +245,25 @@ export class CreateTransferResponse {
     description: 'Waiting confirmation status',
   })
   public need_confirm: boolean;
+}
+
+export class CreateWithdrawalResponse {
+  @ApiModelProperty({
+    description:
+      'Internal transfer/withdrawal ID. (This is not a coin network TX ID.)',
+    required: true,
+  })
+  public id: string;
+
+  @ApiModelProperty({
+    description: 'Waiting confirmation status',
+  })
+  public need_confirm: boolean;
+
+  @ApiModelProperty({
+    description: 'Amount of coins is sending with withdrawal',
+    required: true,
+  })
+  @IsNumberString()
+  amount: string;
 }

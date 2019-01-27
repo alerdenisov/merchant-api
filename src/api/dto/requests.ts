@@ -103,3 +103,20 @@ export class CallbackAddressRequest {
   })
   public label?: string;
 }
+
+export class GetTransactionInfoRequest {
+  @ApiModelProperty({
+    description:
+      'The transaction ID to query (API key must belong to the seller.) Note: It is recommended to handle IPNs instead of using this command when possible, it is more efficient and places less load on our servers.',
+    required: true,
+  })
+  public txid: string;
+
+  @ApiModelProperty({
+    description:
+      'Set to `true` to also include the raw checkout and shipping data for the payment if available. (default: `false`)',
+    default: false,
+    required: false,
+  })
+  public full: boolean;
+}

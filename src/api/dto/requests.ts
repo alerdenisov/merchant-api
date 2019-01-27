@@ -278,3 +278,11 @@ export class CreateWithdrawalBulkRequest {
 }
 
 export class GetWithdrawalHistoryRequest extends PaginatedRequest {}
+
+export class GetWithdrawalInfoRequest {
+  @ApiModelProperty({
+    description: 'The withdrawal ID to query',
+    required: true,
+  })
+  public id: string;
+}

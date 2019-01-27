@@ -13,6 +13,7 @@ import {
   CreateWithdrawalRequest,
   CreateWithdrawalBulkRequest,
   GetWithdrawalHistoryRequest,
+  GetWithdrawalInfoRequest,
 } from './dto/requests';
 
 type Response<T> = T | null | Error;
@@ -109,7 +110,9 @@ export class ApiController {
   }
 
   @Post('/withdrawal_info')
-  async getWithdrawalInfo(): Promise<Response<any>> {
+  async getWithdrawalInfo(
+    @Body() dto: GetWithdrawalInfoRequest,
+  ): Promise<Response<any>> {
     return null;
   }
 }

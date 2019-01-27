@@ -1,6 +1,7 @@
 {
   "compilerOptions": {
     "module": "commonjs",
+    "skipLibCheck": true,
     "noImplicitAny": true,
     "declaration": true,
     "removeComments": true,
@@ -9,8 +10,11 @@
     "target": "es6",
     "sourceMap": true,
     "outDir": "./dist",
-    "baseUrl": "./",
-    "typeRoots": ["node_modules/@types", "src/types"]
+    "baseUrl": "./src",
+    "typeRoots": ["node_modules/@types", "src/types"],
+    "paths": {
+      "*": ["src/types/*"]
+    }
   },
   "exclude": ["node_modules"]
 }

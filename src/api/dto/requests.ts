@@ -1,6 +1,37 @@
 import { ApiModelProperty } from '@nestjs/swagger';
 import { Min, IsInt, validate } from 'class-validator';
 
+class PaginatedRequest {
+  @ApiModelProperty({
+    type: Number,
+    required: false,
+    minimum: 1,
+    maximum: 100,
+    default: 25,
+    description:
+      'The maximum number of items to return from 1-100. (default: 25)',
+  })
+  public limit: number;
+
+  @ApiModelProperty({
+    type: Number,
+    required: false,
+    default: 0,
+    description:
+      'Amount of items to skip before return (default: 0, starts from first entry)',
+  })
+  public start: number;
+
+  @ApiModelProperty({
+    type: Number,
+    required: false,
+    default: 0,
+    description:
+      'Return items created at the given Unix timestamp or later. (default: 0)',
+  })
+  public newer: number;
+}
+
 export class GetRatesRequest {
   @ApiModelProperty({
     default: false,

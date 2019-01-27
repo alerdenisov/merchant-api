@@ -14,7 +14,16 @@ import {
   CreateWithdrawalBulkRequest,
   GetWithdrawalHistoryRequest,
   GetWithdrawalInfoRequest,
+  GetBaseInfoRequest,
 } from './dto/requests';
+import {
+  ApiResponse,
+  ApiOkResponse,
+  ApiOperation,
+  ApiForbiddenResponse,
+  ApiImplicitHeader,
+} from '@nestjs/swagger';
+import { GetBasicInfoResponse } from './dto/responses';
 
 type Response<T> = T | null | Error;
 
@@ -24,8 +33,22 @@ export class ApiController {
 
   // Info
 
+  @ApiOperation({
+    title: 'Get basic account information',
+    description:
+      'Returns object with identification string and private data setupped in admin panel',
+  })
+  @ApiOkResponse({
+    description: 'The bacis information has been successefully received',
+    type: GetBasicInfoResponse,
+  })
+  @ApiForbiddenResponse({ description: 'Forbinned' })
+  @ApiImplicitHeader({
+    name: 'HMAC',
+    description: 'Payload signature based on merchant secret phrase',
+  })
   @Post('/basic_info')
-  async getBasicInfo(): Promise<Response<any>> {
+  async getBasicInfo(@Body() dto: GetBaseInfoRequest): Promise<Response<any>> {
     return null;
   }
 

@@ -61,6 +61,8 @@ class PaginatedRequest extends BaseApiRequest {
   public newer: number;
 }
 
+export class GetBaseInfoRequest extends BaseApiRequest {}
+
 export class GetRatesRequest extends BaseApiRequest {
   @ApiModelProperty({
     default: false,

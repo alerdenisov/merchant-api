@@ -184,7 +184,15 @@ export class ApiController {
     return null;
   }
 
-  // Receive payments
+  @ApiOperation(apiSchema.createTransaction.operation)
+  @ApiOkResponse(apiSchema.createTransaction.ok)
+  @ApiForbiddenResponse(
+    apiSchema.createTransaction.forbidden || defaultForbidden,
+  )
+  @ApiBadRequestResponse(
+    apiSchema.createTransaction.badRequest || defaultBadRequest,
+  )
+  @ApiImplicitHeaders(apiSchema.createTransaction.headers || defaultHeaders)
   @Post('/create_transaction')
   async createTransaction(
     @Body() dto: CreateTransactionRequest,

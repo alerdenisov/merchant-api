@@ -22,10 +22,12 @@ import {
   ApiOperation,
   ApiForbiddenResponse,
   ApiImplicitHeader,
+  ApiBadRequestResponse,
 } from '@nestjs/swagger';
 import { GetBasicInfoResponse } from './dto/responses';
+import { AuthenticationError, ValidationApiError } from './dto/errors';
 
-type Response<T> = T | null | Error;
+type Response<T> = Promise<T>;
 
 @Controller('api')
 export class ApiController {
@@ -42,30 +44,34 @@ export class ApiController {
     description: 'The bacis information has been successefully received',
     type: GetBasicInfoResponse,
   })
-  @ApiForbiddenResponse({ description: 'Forbinned' })
+  @ApiForbiddenResponse({ description: 'Forbinned', type: AuthenticationError })
+  @ApiBadRequestResponse({
+    description: 'Call has been reject while processing',
+    type: ValidationApiError,
+  })
   @ApiImplicitHeader({
     name: 'HMAC',
     description: 'Payload signature based on merchant secret phrase',
   })
   @Post('/basic_info')
-  async getBasicInfo(@Body() dto: GetBaseInfoRequest): Promise<Response<any>> {
+  async getBasicInfo(
+    @Body() dto: GetBaseInfoRequest,
+  ): Response<GetBasicInfoResponse> {
     return null;
   }
 
   @Post('/rates')
-  async getRates(@Body() dto: GetRatesRequest): Promise<Response<any>> {
+  async getRates(@Body() dto: GetRatesRequest): Response<any> {
     return null;
   }
 
   @Post('/balances')
-  async getBalances(@Body() dto: GetBalancesRequest): Promise<Response<any>> {
+  async getBalances(@Body() dto: GetBalancesRequest): Response<any> {
     return null;
   }
 
   @Post('/deposit_address')
-  async getDepositAddress(
-    @Body() dto: GetDepositAddress,
-  ): Promise<Response<any>> {
+  async getDepositAddress(@Body() dto: GetDepositAddress): Response<any> {
     return null;
   }
 
@@ -74,68 +80,62 @@ export class ApiController {
   @Post('/create_transaction')
   async createTransaction(
     @Body() dto: CreateTransactionRequest,
-  ): Promise<Response<any>> {
+  ): Response<any> {
     return null;
   }
 
   @Post('/callback_address')
-  async getCallbackAddress(
-    @Body() dto: CallbackAddressRequest,
-  ): Promise<Response<any>> {
+  async getCallbackAddress(@Body() dto: CallbackAddressRequest): Response<any> {
     return null;
   }
 
   @Post('/tx_info')
   async getTransactionInfo(
     @Body() dto: GetTransactionInfoRequest,
-  ): Promise<Response<any>> {
+  ): Response<any> {
     return null;
   }
 
   @Post('/txs_info')
   async getTransactionsInfo(
     @Body() dto: GetTransactionsInfoRequest,
-  ): Promise<Response<any>> {
+  ): Response<any> {
     return null;
   }
 
   @Post('/txs')
   async getTransactionsList(
     @Body() dto: GetTransactionsListRequest,
-  ): Promise<Response<any>> {}
+  ): Response<any> {}
 
   // Send funds
   @Post('/create_transfer')
-  async createTransfer(
-    @Body() dto: CreateTransferRequest,
-  ): Promise<Response<any>> {
+  async createTransfer(@Body() dto: CreateTransferRequest): Response<any> {
     return null;
   }
 
   @Post('/create_withdrawal')
-  async createWithdrawal(
-    @Body() dto: CreateWithdrawalRequest,
-  ): Promise<Response<any>> {
+  async createWithdrawal(@Body() dto: CreateWithdrawalRequest): Response<any> {
     return null;
   }
   @Post('/create_withdrawals')
   async createWithdrawalBulk(
     @Body() dto: CreateWithdrawalBulkRequest,
-  ): Promise<Response<any>> {
+  ): Response<any> {
     return null;
   }
 
   @Post('/withdrawal_history')
   async getWithdrawalHistory(
     @Body() dto: GetWithdrawalHistoryRequest,
-  ): Promise<Response<any>> {
+  ): Response<any> {
     return null;
   }
 
   @Post('/withdrawal_info')
   async getWithdrawalInfo(
     @Body() dto: GetWithdrawalInfoRequest,
-  ): Promise<Response<any>> {
+  ): Response<any> {
     return null;
   }
 }

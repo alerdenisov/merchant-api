@@ -33,6 +33,7 @@ import {
   GetDepositAddressResponse,
   CreateTransactionResponse,
   CallbackAddressResponse,
+  CreateTransferResponse,
 } from './dto/responses';
 import { AuthenticationError, ValidationApiError } from './dto/errors';
 
@@ -144,6 +145,45 @@ const apiSchema: { [method in methods]?: MethodSchema } = {
       type: CallbackAddressResponse,
     },
   },
+  getTransactionInfo: {
+    operation: {
+      title: 'Get Transaction Information',
+      description:
+        'Return transaction details. \nNote: If at all possible you should use the Instant Payment Notification (IPN) system to receive notifications about payments instead of using this polled interface.',
+    },
+    ok: {
+      description: '',
+    },
+  },
+  getTransactionsInfo: {
+    operation: {
+      title: 'Get Transactions Bulk Information',
+      description:
+        'Return transaction details. \nNote: If at all possible you should use the Instant Payment Notification (IPN) system to receive notifications about payments instead of using this polled interface.',
+    },
+    ok: {
+      description: '',
+    },
+  },
+  getTransactionsList: {
+    operation: {
+      title: 'Get Transaction List IDs',
+      description:
+        'Return paginated list of known merchant transactions\nNote: If at all possible you should use the Instant Payment Notification (IPN) system to receive notifications about payments instead of using this polled interface.',
+    },
+    ok: {
+      description: '',
+    },
+  },
+
+  createTransfer: {
+    operation: {
+      title: 'Create Transfer',
+    },
+    ok: {
+      type: CreateTransferResponse,
+    },
+  },
 };
 
 @Controller('api')
@@ -213,11 +253,29 @@ export class ApiController {
     return null;
   }
 
+  @ApiOperation(apiSchema.getCallbackAddress.operation)
+  @ApiOkResponse(apiSchema.getCallbackAddress.ok)
+  @ApiForbiddenResponse(
+    apiSchema.getCallbackAddress.forbidden || defaultForbidden,
+  )
+  @ApiBadRequestResponse(
+    apiSchema.getCallbackAddress.badRequest || defaultBadRequest,
+  )
+  @ApiImplicitHeaders(apiSchema.getCallbackAddress.headers || defaultHeaders)
   @Post('/callback_address')
   async getCallbackAddress(@Body() dto: CallbackAddressRequest): Response<any> {
     return null;
   }
 
+  @ApiOperation(apiSchema.getTransactionInfo.operation)
+  @ApiOkResponse(apiSchema.getTransactionInfo.ok)
+  @ApiForbiddenResponse(
+    apiSchema.getTransactionInfo.forbidden || defaultForbidden,
+  )
+  @ApiBadRequestResponse(
+    apiSchema.getTransactionInfo.badRequest || defaultBadRequest,
+  )
+  @ApiImplicitHeaders(apiSchema.getTransactionInfo.headers || defaultHeaders)
   @Post('/tx_info')
   async getTransactionInfo(
     @Body() dto: GetTransactionInfoRequest,
@@ -225,6 +283,15 @@ export class ApiController {
     return null;
   }
 
+  @ApiOperation(apiSchema.getTransactionsInfo.operation)
+  @ApiOkResponse(apiSchema.getTransactionsInfo.ok)
+  @ApiForbiddenResponse(
+    apiSchema.getTransactionsInfo.forbidden || defaultForbidden,
+  )
+  @ApiBadRequestResponse(
+    apiSchema.getTransactionsInfo.badRequest || defaultBadRequest,
+  )
+  @ApiImplicitHeaders(apiSchema.getTransactionsInfo.headers || defaultHeaders)
   @Post('/txs_info')
   async getTransactionsInfo(
     @Body() dto: GetTransactionsInfoRequest,
@@ -232,12 +299,29 @@ export class ApiController {
     return null;
   }
 
+  @ApiOperation(apiSchema.getTransactionsList.operation)
+  @ApiOkResponse(apiSchema.getTransactionsList.ok)
+  @ApiForbiddenResponse(
+    apiSchema.getTransactionsList.forbidden || defaultForbidden,
+  )
+  @ApiBadRequestResponse(
+    apiSchema.getTransactionsList.badRequest || defaultBadRequest,
+  )
+  @ApiImplicitHeaders(apiSchema.getTransactionsList.headers || defaultHeaders)
   @Post('/txs')
   async getTransactionsList(
     @Body() dto: GetTransactionsListRequest,
   ): Response<any> {}
 
   // Send funds
+
+  @ApiOperation(apiSchema.createTransfer.operation)
+  @ApiOkResponse(apiSchema.createTransfer.ok)
+  @ApiForbiddenResponse(apiSchema.createTransfer.forbidden || defaultForbidden)
+  @ApiBadRequestResponse(
+    apiSchema.createTransfer.badRequest || defaultBadRequest,
+  )
+  @ApiImplicitHeaders(apiSchema.createTransfer.headers || defaultHeaders)
   @Post('/create_transfer')
   async createTransfer(@Body() dto: CreateTransferRequest): Response<any> {
     return null;

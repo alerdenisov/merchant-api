@@ -232,3 +232,16 @@ export class CallbackAddressResponse {
   })
   public tag: string;
 }
+
+export class CreateTransferResponse {
+  @ApiModelProperty({
+    description:
+      'Internal transfer/withdrawal ID. (This is not a coin network TX ID.)',
+  })
+  public id: string;
+
+  @ApiModelProperty({
+    description: 'Waiting confirmation status',
+  })
+  public need_confirm: boolean;
+}

@@ -37,7 +37,7 @@ services:
       - db
     labels:
       traefik.enable: true
-      traefik.frontend.rule: 'Host: merchant.maincoin.money; AddPrefix: /api'
+      traefik.frontend.rule: 'Host: merchant.maincoin.money; PathPrefixStrip: /api'
       traefik.port: 9000
 
   proxy:

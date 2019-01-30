@@ -11,7 +11,7 @@ const customJoi = joi.extend((j: any) => ({
 
 export async function setupEnvironment() {
   process.env = await joi.validate(
-    process.env,
+    <any>process.env,
     {
       NODE_ENV: joi
         .string()

@@ -1,12 +1,12 @@
 import { Module, DynamicModule } from '@nestjs/common';
-import { ApiModule } from './api/api.module';
-import { BalancesModule } from './balances/balances.module';
-import { MerchantsModule } from './merchants/merchants.module';
-import { DatabaseModule } from './database/database.module';
+import { ApiModule } from 'api/api.module';
+import { BalancesModule } from 'balances/balances.module';
+import { MerchantsModule } from 'merchants/merchants.module';
+import { DatabaseModule } from 'database/database.module';
+// import { EthereumModule } from 'blockchains/ethereum/ethereum.module';
 
 export class ApplicationModule {
   static forRoot(): DynamicModule {
-    console.log(process.env);
     return {
       module: ApplicationModule,
       imports: [
@@ -22,6 +22,7 @@ export class ApplicationModule {
         ApiModule,
         BalancesModule,
         MerchantsModule,
+        // EthereumModule,
       ],
     };
   }

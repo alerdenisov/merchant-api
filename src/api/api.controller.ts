@@ -1,5 +1,5 @@
 import { Controller, Post, Body, Get } from '@nestjs/common';
-import { ApiService } from './api.service';
+import { ApiService } from 'api/api.service';
 import {
   GetRatesRequest,
   GetBalancesRequest,
@@ -15,7 +15,7 @@ import {
   GetWithdrawalHistoryRequest,
   GetWithdrawalInfoRequest,
   GetBaseInfoRequest,
-} from './dto/requests';
+} from 'api/dto/requests';
 import {
   ApiOkResponse,
   ApiOperation,
@@ -34,11 +34,9 @@ import {
   CreateTransferResponse,
   CreateWithdrawalResponse,
   WithdrawalInfoResponse,
-} from './dto/responses';
-import { AuthenticationError, ValidationApiError } from './dto/errors';
+} from 'api/dto/responses';
+import { AuthenticationError, ValidationApiError } from 'api/dto/errors';
 import { Client, ClientProxy, Transport } from '@nestjs/microservices';
-
-type Response<T> = Promise<T>;
 
 interface MethodOperationMeta {
   title: string;
@@ -248,7 +246,7 @@ export class ApiController {
   @Post('/basic_info')
   async getBasicInfo(
     @Body() dto: GetBaseInfoRequest,
-  ): Response<GetBasicInfoResponse> {
+  ): Promise<GetBasicInfoResponse> {
     return null;
   }
 
@@ -258,7 +256,7 @@ export class ApiController {
   @ApiBadRequestResponse(apiSchema.getRates.badRequest || defaultBadRequest)
   @ApiImplicitHeaders(apiSchema.getRates.headers || defaultHeaders)
   @Post('/rates')
-  async getRates(@Body() dto: GetRatesRequest): Response<GetRatesResponse> {
+  async getRates(@Body() dto: GetRatesRequest): Promise<GetRatesResponse> {
     return null;
   }
 
@@ -270,7 +268,7 @@ export class ApiController {
   @Post('/balances')
   async getBalances(
     @Body() dto: GetBalancesRequest,
-  ): Response<GetBalancesResponse> {
+  ): Promise<GetBalancesResponse> {
     return null;
   }
 
@@ -286,7 +284,7 @@ export class ApiController {
   @Post('/deposit_address')
   async getDepositAddress(
     @Body() dto: GetDepositAddressRequest,
-  ): Response<GetDepositAddressResponse> {
+  ): Promise<GetDepositAddressResponse> {
     return null;
   }
 
@@ -302,7 +300,7 @@ export class ApiController {
   @Post('/create_transaction')
   async createTransaction(
     @Body() dto: CreateTransactionRequest,
-  ): Response<CreateTransactionResponse> {
+  ): Promise<CreateTransactionResponse> {
     return null;
   }
 
@@ -318,7 +316,7 @@ export class ApiController {
   @Post('/callback_address')
   async getCallbackAddress(
     @Body() dto: CallbackAddressRequest,
-  ): Response<CallbackAddressResponse> {
+  ): Promise<CallbackAddressResponse> {
     return null;
   }
 
@@ -334,7 +332,7 @@ export class ApiController {
   @Post('/tx_info')
   async getTransactionInfo(
     @Body() dto: GetTransactionInfoRequest,
-  ): Response<any> {
+  ): Promise<any> {
     return null;
   }
 
@@ -350,7 +348,7 @@ export class ApiController {
   @Post('/txs_info')
   async getTransactionsInfo(
     @Body() dto: GetTransactionsInfoRequest,
-  ): Response<any> {
+  ): Promise<any> {
     return null;
   }
 
@@ -366,7 +364,7 @@ export class ApiController {
   @Post('/txs')
   async getTransactionsList(
     @Body() dto: GetTransactionsListRequest,
-  ): Response<any> {}
+  ): Promise<any> {}
 
   // Send funds
 
@@ -380,7 +378,7 @@ export class ApiController {
   @Post('/create_transfer')
   async createTransfer(
     @Body() dto: CreateTransferRequest,
-  ): Response<CreateTransactionResponse> {
+  ): Promise<CreateTransactionResponse> {
     return null;
   }
 
@@ -396,7 +394,7 @@ export class ApiController {
   @Post('/create_withdrawal')
   async createWithdrawal(
     @Body() dto: CreateWithdrawalRequest,
-  ): Response<CreateWithdrawalResponse> {
+  ): Promise<CreateWithdrawalResponse> {
     return null;
   }
 
@@ -412,7 +410,7 @@ export class ApiController {
   @Post('/create_withdrawals')
   async createWithdrawalBulk(
     @Body() dto: CreateWithdrawalBulkRequest,
-  ): Response<CreateWithdrawalResponse[]> {
+  ): Promise<CreateWithdrawalResponse[]> {
     return null;
   }
 
@@ -428,7 +426,7 @@ export class ApiController {
   @Post('/withdrawal_history')
   async getWithdrawalHistory(
     @Body() dto: GetWithdrawalHistoryRequest,
-  ): Response<WithdrawalInfoResponse> {
+  ): Promise<WithdrawalInfoResponse> {
     return null;
   }
 
@@ -444,7 +442,7 @@ export class ApiController {
   @Post('/withdrawal_info')
   async getWithdrawalInfo(
     @Body() dto: GetWithdrawalInfoRequest,
-  ): Response<WithdrawalInfoResponse[]> {
+  ): Promise<WithdrawalInfoResponse[]> {
     return null;
   }
 }

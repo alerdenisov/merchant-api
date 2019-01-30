@@ -5,8 +5,8 @@ import {
   Index,
   OneToMany,
 } from 'typeorm';
-import { CallbackAddress } from './callback_address.entity';
-import { ApiKey } from './api_keys.entity';
+import { CallbackAddress } from 'entities/callback_address.entity';
+import { ApiKey } from 'entities/api_keys.entity';
 
 @Entity()
 export class Merchant {

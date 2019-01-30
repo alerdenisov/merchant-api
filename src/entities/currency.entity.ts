@@ -6,12 +6,32 @@ import {
   OneToMany,
   UpdateDateColumn,
   CreateDateColumn,
+  ManyToOne,
 } from 'typeorm';
-import { CallbackAddress } from './callback_address.entity';
-import { ApiKey } from './api_keys.entity';
+import { BlockchainEntity } from 'entities/blockchain.entity';
 
 @Entity()
 export class Currency {
+  // #  id                    :string(10)       not null, primary key
+  // #  name                  :string(255)
+  // #  blockchain_key        :string(32)
+  // #  symbol                :string(1)        not null
+  // #  type                  :string(30)       default("coin"), not null
+  // #  deposit_fee           :decimal(32, 16)  default(0.0), not null
+  // #  min_deposit_amount    :decimal(32, 16)  default(0.0), not null
+  // #  min_collection_amount :decimal(32, 16)  default(0.0), not null
+  // #  withdraw_fee          :decimal(32, 16)  default(0.0), not null
+  // #  min_withdraw_amount   :decimal(32, 16)  default(0.0), not null
+  // #  withdraw_limit_24h    :decimal(32, 16)  default(0.0), not null
+  // #  withdraw_limit_72h    :decimal(32, 16)  default(0.0), not null
+  // #  options               :string(1000)     default({}), not null
+  // #  enabled               :boolean          default(TRUE), not null
+  // #  base_factor           :integer          default(1), not null
+  // #  precision             :integer          default(8), not null
+  // #  icon_url              :string(255)
+  // #  created_at            :datetime         not null
+  // #  updated_at            :datetime         not null
+
   @PrimaryGeneratedColumn() id: number;
 
   @Index({
@@ -29,8 +49,9 @@ export class Currency {
   @Column('bool', { default: false })
   is_fiat: boolean;
 
-  @Column('tinyint')
-  blockchain: number;
+  @Index()
+  @ManyToOne(type => BlockchainEntity, blockchain => blockchain.currencies)
+  blockchain: BlockchainEntity;
 
   @Column({ default: 0 })
   public rate_btc: number;
@@ -74,4 +95,7 @@ export class Currency {
   @Index()
   @Column({ default: true })
   public capabilities_convert: boolean;
+
+  @Column('json', { nullable: true })
+  public meta: any;
 }

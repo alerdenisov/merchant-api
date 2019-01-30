@@ -5,7 +5,7 @@ import {
   Index,
   ManyToOne,
 } from 'typeorm';
-import { Merchant } from './merchant.entity';
+import { Merchant } from 'entities/merchant.entity';
 
 @Entity()
 export class CallbackAddress {

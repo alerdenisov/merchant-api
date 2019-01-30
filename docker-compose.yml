@@ -37,7 +37,7 @@ services:
       - db
     labels:
       traefik.enable: true
-      traefik.frontend.rule: 'Host: api.merchant.maincoin.money'
+      traefik.frontend.rule: 'Host: mapi.maincoin.money'
       traefik.port: 9000
 
   proxy:
@@ -53,8 +53,8 @@ services:
       default:
         aliases:
           - merchant.maincoin.money
-          - api.merchant.maincoin.money
+          - mapi.maincoin.money
     labels:
       traefik.enable: true
-      traefik.frontend.rule: 'Host: monitor.merchant.maincoin.money'
+      traefik.frontend.rule: 'Host: monitor-merchant.maincoin.money'
       traefik.port: 8080

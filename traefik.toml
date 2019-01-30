@@ -20,7 +20,7 @@ exposedbydefault = false
 
 [acme]
 email = "support@maincoin.money"
-storage = "/home/merchant/acme.json"
+storage = "/acme.json"
 entryPoint = "https"
 OnHostRule = true
 usebindportip = true

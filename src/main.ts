@@ -23,7 +23,6 @@ export async function bootstrap() {
     .setTitle('Merchant API')
     .setDescription('The Merchant API description')
     .setVersion(packageJson.version)
-    .addTag('swagger')
     .build();
 
   const document = SwaggerModule.createDocument(app, options);

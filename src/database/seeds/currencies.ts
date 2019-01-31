@@ -1,10 +1,11 @@
-import { Currency } from 'entities/currency.entity';
+import { CurrencyEntity } from 'entities/currency.entity';
 import { Connection } from 'typeorm';
 import { BlockchainEntity } from 'entities/blockchain.entity';
 
 export async function seed(connection: Connection): Promise<void> {
-  console.log('seed currencies');
-  const currencyRepository = await connection.getRepository<Currency>(Currency);
+  const currencyRepository = await connection.getRepository<CurrencyEntity>(
+    CurrencyEntity,
+  );
   const blockchainRepository = await connection.getRepository<BlockchainEntity>(
     BlockchainEntity,
   );
@@ -12,15 +13,26 @@ export async function seed(connection: Connection): Promise<void> {
     await Promise.all(
       [
         ['eth', 18, 'Ethereum', false, 'ethereum'],
-        ['mnc', 18, 'Maincoin', false, 'ethereum'],
+        [
+          'mnc',
+          18,
+          'Maincoin',
+          false,
+          'ethereum',
+          {
+            eth_erc20: true,
+            eth_contractAddress: '0x9f0f1Be08591AB7d990faf910B38ed5D60e4D5Bf',
+          },
+        ],
         ['musd', 8, 'Main Cash', true, 'rinkeby'],
       ].map(
-        async ([symbol, decimals, name, is_fiat, key]: [
+        async ([symbol, decimals, name, is_fiat, key, meta]: [
           string,
           number,
           string,
           boolean,
-          string
+          string,
+          any
         ]) => {
           const newCurrency = currencyRepository.create();
           Object.assign(newCurrency, {
@@ -30,6 +42,10 @@ export async function seed(connection: Connection): Promise<void> {
             is_fiat,
             confirms: 12,
           });
+
+          newCurrency.meta = meta || {};
+
+          console.log(newCurrency, meta);
 
           newCurrency.blockchain = await blockchainRepository.findOne({
             where: { key },

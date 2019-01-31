@@ -1,4 +1,4 @@
-import { Controller, Post, Body, Get } from '@nestjs/common';
+import { Controller, Post, Body, Get, UseGuards } from '@nestjs/common';
 import { ApiService } from 'api/api.service';
 import {
   GetRatesRequest,
@@ -38,6 +38,7 @@ import {
 } from 'api/dto/responses';
 import { AuthenticationError, ValidationApiError } from 'api/dto/errors';
 import { Client, ClientProxy, Transport } from '@nestjs/microservices';
+import { SignedRequestGuard } from 'merchants/signed-request.guard';
 
 interface MethodOperationMeta {
   title: string;
@@ -233,6 +234,7 @@ function implicitBody<TRequest>(func: new () => TRequest) {
   };
 }
 
+@UseGuards(SignedRequestGuard)
 @Controller('api')
 export class ApiController {
   @Client({ transport: Transport.TCP })

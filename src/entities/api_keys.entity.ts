@@ -6,8 +6,10 @@ import {
   ManyToOne,
   CreateDateColumn,
   PrimaryColumn,
+  EntityRepository,
 } from 'typeorm';
 import { MerchantEntity } from 'entities/merchant.entity';
+import { ExtendedRepository } from './extended-repository';
 
 @Entity()
 export class ApiKeyEntity {
@@ -33,4 +35,16 @@ export class ApiKeyEntity {
 
   @Column('binary', { default: 0 })
   permissions: number;
+}
+
+@EntityRepository(ApiKeyEntity)
+export class ApiKeyRepository extends ExtendedRepository<ApiKeyEntity> {
+  findByPublic(public_key: string, ...populate: Array<keyof ApiKeyEntity>) {
+    return this.populate(
+      this.begin().where({
+        public_key,
+      }),
+      populate,
+    );
+  }
 }

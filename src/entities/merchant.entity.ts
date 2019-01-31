@@ -4,12 +4,14 @@ import {
   PrimaryGeneratedColumn,
   Index,
   OneToMany,
+  CreateDateColumn,
 } from 'typeorm';
-import { CallbackAddress } from 'entities/callback_address.entity';
-import { ApiKey } from 'entities/api_keys.entity';
+import { ApiKeyEntity } from 'entities/api_keys.entity';
+import { InvoiceEntity } from './invoice.entity';
+import { DepositAddressEntity } from './deposit-address.entity';
 
 @Entity()
-export class Merchant {
+export class MerchantEntity {
   @PrimaryGeneratedColumn() id: number;
 
   @Index({
@@ -21,12 +23,18 @@ export class Merchant {
   @Column()
   displayName: string;
 
-  @Column('datetime')
+  @CreateDateColumn()
   createdAt: Date;
 
-  @OneToMany(type => CallbackAddress, address => address.merchant)
-  callbacks: CallbackAddress[];
+  @Column({ nullable: true })
+  ipn: string;
 
-  @OneToMany(type => ApiKey, address => address.merchant)
-  keys: ApiKey[];
+  @OneToMany(type => DepositAddressEntity, address => address.merchant)
+  addresses: DepositAddressEntity[];
+
+  @OneToMany(type => ApiKeyEntity, address => address.merchant)
+  keys: ApiKeyEntity[];
+
+  @OneToMany(type => InvoiceEntity, invoice => invoice.currency)
+  invoices: InvoiceEntity[];
 }

@@ -7,8 +7,12 @@ import {
   Index,
   OneToMany,
   JoinTable,
+  Repository,
+  EntityRepository,
 } from 'typeorm';
-import { Currency } from 'entities/currency.entity';
+import { CurrencyEntity } from 'entities/currency.entity';
+import { DepositAddressEntity } from './deposit-address.entity';
+import { ExtendedRepository } from './extended-repository';
 
 export enum BlockchainStatus {
   Online = 0,
@@ -66,6 +70,29 @@ export class BlockchainEntity {
   @UpdateDateColumn()
   public updated_at: Date;
 
-  @OneToMany(type => Currency, coin => coin.blockchain)
-  currencies: Currency[];
+  @OneToMany(type => CurrencyEntity, coin => coin.blockchain)
+  currencies: CurrencyEntity[];
+
+  @OneToMany(type => CurrencyEntity, coin => coin.blockchain)
+  addresses: DepositAddressEntity[];
+
+  @Column({ default: '{}' })
+  public _meta: string;
+
+  get meta(): { [key: string]: any } {
+    return JSON.parse(this._meta);
+  }
+
+  set meta(value: { [key: string]: any }) {
+    this._meta = JSON.stringify(value);
+  }
+}
+
+@EntityRepository(BlockchainEntity)
+export class BlockchainEntityRepository extends ExtendedRepository<
+  BlockchainEntity
+> {
+  get(key: string, ...populate: Array<keyof BlockchainEntity>) {
+    return this.populate(this.begin().where({ key }), populate);
+  }
 }

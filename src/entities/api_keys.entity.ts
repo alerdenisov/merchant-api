@@ -7,14 +7,14 @@ import {
   CreateDateColumn,
   PrimaryColumn,
 } from 'typeorm';
-import { Merchant } from 'entities/merchant.entity';
+import { MerchantEntity } from 'entities/merchant.entity';
 
 @Entity()
-export class ApiKey {
+export class ApiKeyEntity {
   @PrimaryGeneratedColumn() id: number;
 
-  @ManyToOne(type => Merchant, merchant => merchant.keys)
-  merchant: Merchant;
+  @ManyToOne(type => MerchantEntity, merchant => merchant.keys)
+  merchant: MerchantEntity;
 
   @Index({
     unique: true,
@@ -29,9 +29,8 @@ export class ApiKey {
   private_key: string;
 
   @CreateDateColumn()
-  @Column()
   create_at: Date;
 
-  @Column('binary')
+  @Column('binary', { default: 0 })
   permissions: number;
 }

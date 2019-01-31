@@ -7,11 +7,14 @@ import {
   UpdateDateColumn,
   CreateDateColumn,
   ManyToOne,
+  ManyToMany,
 } from 'typeorm';
 import { BlockchainEntity } from 'entities/blockchain.entity';
+import { InvoiceEntity } from 'entities/invoice.entity';
+import { DepositAddressEntity } from 'entities/deposit-address.entity';
 
 @Entity()
-export class Currency {
+export class CurrencyEntity {
   // #  id                    :string(10)       not null, primary key
   // #  name                  :string(255)
   // #  blockchain_key        :string(32)
@@ -96,6 +99,20 @@ export class Currency {
   @Column({ default: true })
   public capabilities_convert: boolean;
 
-  @Column('json', { nullable: true })
-  public meta: any;
+  @Column({ default: '{}' })
+  public _meta: string;
+
+  @OneToMany(type => InvoiceEntity, invoice => invoice.currency)
+  invoices: InvoiceEntity[];
+
+  @OneToMany(type => DepositAddressEntity, address => address.currency)
+  addresses: DepositAddressEntity[];
+
+  get meta(): { [key: string]: any } {
+    return JSON.parse(this._meta);
+  }
+
+  set meta(value: { [key: string]: any }) {
+    this._meta = JSON.stringify(value);
+  }
 }

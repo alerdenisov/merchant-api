@@ -1,6 +1,5 @@
 import { Connection } from 'typeorm';
-import { seed as bc } from 'database/seeds/blockchains';
-import { seed as cur } from 'database/seeds/currencies';
+import { blockchains, currencies, merchants } from 'database/seeds';
 
 function clearDb(connection: Connection) {
   return connection.transaction(async em => {
@@ -14,6 +13,9 @@ function clearDb(connection: Connection) {
 
 export async function seed(connection: Connection) {
   await clearDb(connection);
-  await bc(connection);
-  await cur(connection);
+  const transaction = connection.transaction(async em => {
+    await blockchains(em);
+    await currencies(em);
+    await merchants(em);
+  });
 }

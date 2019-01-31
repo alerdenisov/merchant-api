@@ -1,13 +1,13 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { Merchant } from 'entities/merchant.entity';
+import { MerchantEntity } from 'entities/merchant.entity';
 
 @Injectable()
 export class MerchantsService {
   constructor(
-    @InjectRepository(Merchant)
-    private readonly merchantRepository: Repository<Merchant>,
+    @InjectRepository(MerchantEntity)
+    private readonly merchantRepository: Repository<MerchantEntity>,
   ) {}
 
   findById(id: number) {

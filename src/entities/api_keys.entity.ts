@@ -35,6 +35,9 @@ export class ApiKeyEntity {
 
   @Column('binary', { default: 0 })
   permissions: number;
+
+  @Column({ default: -1 })
+  nonce: number;
 }
 
 @EntityRepository(ApiKeyEntity)

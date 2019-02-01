@@ -8,10 +8,12 @@ import {
   CreateDateColumn,
   ManyToOne,
   ManyToMany,
+  EntityRepository,
 } from 'typeorm';
 import { BlockchainEntity } from 'entities/blockchain.entity';
 import { InvoiceEntity } from 'entities/invoice.entity';
 import { DepositAddressEntity } from 'entities/deposit-address.entity';
+import { ExtendedRepository } from './extended-repository';
 
 @Entity()
 export class CurrencyEntity {
@@ -116,3 +118,6 @@ export class CurrencyEntity {
     this._meta = JSON.stringify(value);
   }
 }
+
+@EntityRepository(CurrencyEntity)
+export class CurrencyRepository extends ExtendedRepository<CurrencyEntity> {}

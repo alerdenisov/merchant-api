@@ -8,7 +8,7 @@ import {
 import { Request } from 'express';
 
 @Injectable()
-export class SignedRequestGuard implements CanActivate {
+export class NonceRequestGuard implements CanActivate {
   private readonly client: ClientProxy;
 
   constructor() {
@@ -27,16 +27,16 @@ export class SignedRequestGuard implements CanActivate {
           .send(
             {
               service: 'merchant',
-              cmd: 'validateSignature',
+              cmd: 'validateNonce',
             },
             {
               key: request.merchantKey,
-              signature: request.headers['hmac'],
-              payload: request.body,
+              nonce: request.body.nonce,
             },
           )
           .toPromise(),
       )
+      .then(() => true)
       .catch(e => false);
   }
 }

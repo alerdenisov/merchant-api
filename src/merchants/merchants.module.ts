@@ -5,6 +5,15 @@ import { MerchantsController } from 'merchants/merchants.controller';
 import { MerchantEntity, MerchantRepository } from 'entities/merchant.entity';
 import { InvoiceEntity, InvoiceRepository } from 'entities/invoice.entity';
 import { ApiKeyEntity, ApiKeyRepository } from 'entities/api_keys.entity';
+import {
+  DepositAddressEntity,
+  DepositAddressRepository,
+} from 'entities/deposit-address.entity';
+import { CurrencyEntity, CurrencyRepository } from 'entities/currency.entity';
+import {
+  BlockchainEntity,
+  BlockchainEntityRepository,
+} from 'entities/blockchain.entity';
 
 @Module({
   providers: [MerchantsService],
@@ -13,6 +22,12 @@ import { ApiKeyEntity, ApiKeyRepository } from 'entities/api_keys.entity';
     TypeOrmModule.forFeature([
       MerchantEntity,
       MerchantRepository,
+      DepositAddressEntity,
+      DepositAddressRepository,
+      CurrencyEntity,
+      CurrencyRepository,
+      BlockchainEntity,
+      BlockchainEntityRepository,
       InvoiceEntity,
       InvoiceRepository,
       ApiKeyEntity,

@@ -1,4 +1,11 @@
-import { Controller, Post, Body, Get, UseGuards } from '@nestjs/common';
+import {
+  Controller,
+  Post,
+  Body,
+  Get,
+  UseGuards,
+  Request,
+} from '@nestjs/common';
 import { ApiService } from 'api/api.service';
 import {
   GetRatesRequest,
@@ -39,6 +46,9 @@ import {
 import { AuthenticationError, ValidationApiError } from 'api/dto/errors';
 import { Client, ClientProxy, Transport } from '@nestjs/microservices';
 import { SignedRequestGuard } from 'merchants/signed-request.guard';
+import { MerchantGuard } from 'merchants/merchant.guard';
+import { Request as HttpRequest } from 'express';
+import { NonceRequestGuard } from 'merchants/request-nonce.guard';
 
 interface MethodOperationMeta {
   title: string;
@@ -234,7 +244,7 @@ function implicitBody<TRequest>(func: new () => TRequest) {
   };
 }
 
-@UseGuards(SignedRequestGuard)
+@UseGuards(MerchantGuard, NonceRequestGuard, SignedRequestGuard)
 @Controller('api')
 export class ApiController {
   @Client({ transport: Transport.TCP })
@@ -252,8 +262,21 @@ export class ApiController {
   @Post('/basic_info')
   async getBasicInfo(
     @Body() dto: GetBaseInfoRequest,
+    @Request() r: HttpRequest,
   ): Promise<GetBasicInfoResponse> {
-    return null;
+    return this.apiService.getInfo(dto, r);
+  }
+
+  @UseGuards(MerchantGuard, SignedRequestGuard)
+  @ApiOperation(apiSchema.getBasicInfo.operation)
+  @ApiOkResponse(apiSchema.getBasicInfo.ok)
+  @ApiForbiddenResponse(apiSchema.getBasicInfo.forbidden || defaultForbidden)
+  @ApiBadRequestResponse(apiSchema.getBasicInfo.badRequest || defaultBadRequest)
+  @ApiImplicitHeaders(apiSchema.getBasicInfo.headers || defaultHeaders)
+  @ApiImplicitBody(implicitBody(GetBaseInfoRequest))
+  @Post('/get_nonce')
+  async getNonce(@Body() dto: GetBaseInfoRequest, @Request() r: HttpRequest) {
+    return this.apiService.getKeyNonce(dto, r);
   }
 
   @ApiOperation(apiSchema.getRates.operation)

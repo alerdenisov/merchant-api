@@ -22,4 +22,8 @@ export class ManageController {
   public getBlockchains(): Promise<BlockchainEntity[]> {
     return this.service.getBlockchains();
   }
+  @Get('/keys')
+  public getKeys(): Promise<BlockchainEntity[]> {
+    return this.service.getKeys();
+  }
 }

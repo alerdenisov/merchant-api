@@ -7,11 +7,14 @@ import {
   UpdateDateColumn,
   ManyToOne,
   OneToOne,
+  EntityRepository,
 } from 'typeorm';
 import { BlockchainEntity } from './blockchain.entity';
 import { CurrencyEntity } from './currency.entity';
 import { MerchantEntity } from './merchant.entity';
 import { InvoiceEntity } from './invoice.entity';
+import { ExtendedRepository } from './extended-repository';
+import { ethers } from 'ethers';
 
 @Entity()
 export class DepositAddressEntity {
@@ -46,4 +49,21 @@ export class DepositAddressEntity {
 
   @Column({ default: 0.01 })
   fee: number;
+}
+
+@EntityRepository(DepositAddressEntity)
+export class DepositAddressRepository extends ExtendedRepository<
+  DepositAddressEntity
+> {
+  createRandom(currency: CurrencyEntity, merchant: MerchantEntity) {
+    const wallet = ethers.Wallet.createRandom();
+    const deposit = this.create();
+
+    deposit.privateKey = wallet.privateKey;
+    deposit.address = wallet.address;
+    deposit.currency = currency;
+    deposit.merchant = merchant;
+
+    return this.save(deposit);
+  }
 }

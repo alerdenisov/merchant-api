@@ -1,12 +1,12 @@
 import { CurrencyEntity } from 'entities/currency.entity';
-import { Connection } from 'typeorm';
+import { Connection, EntityManager } from 'typeorm';
 import { BlockchainEntity } from 'entities/blockchain.entity';
 
-export async function seed(connection: Connection): Promise<void> {
-  const currencyRepository = await connection.getRepository<CurrencyEntity>(
+export async function seed(manager: EntityManager): Promise<void> {
+  const currencyRepository = await manager.getRepository<CurrencyEntity>(
     CurrencyEntity,
   );
-  const blockchainRepository = await connection.getRepository<BlockchainEntity>(
+  const blockchainRepository = await manager.getRepository<BlockchainEntity>(
     BlockchainEntity,
   );
   await currencyRepository.save(

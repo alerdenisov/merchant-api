@@ -14,7 +14,10 @@ export async function seed(manager: EntityManager): Promise<void> {
   await merchants.save(maincoin);
 
   const mainkey = apiKeys.create();
-  const wallet = ethers.Wallet.createRandom(40);
+  const wallet = ethers.Wallet.fromMnemonic(
+    'timber similar retire income arm kit want jeans illegal casino real update',
+  );
+
   mainkey.private_key = wallet.privateKey.substr(2);
   mainkey.public_key = wallet.address.substr(2);
   mainkey.merchant = await merchants.findOne({

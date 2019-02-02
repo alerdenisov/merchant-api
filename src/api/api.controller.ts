@@ -23,6 +23,7 @@ import {
   GetWithdrawalHistoryRequest,
   GetWithdrawalInfoRequest,
   GetBaseInfoRequest,
+  GetNonceRequest,
 } from 'api/dto/requests';
 import {
   ApiOkResponse,
@@ -288,9 +289,9 @@ export class ApiController {
   @ApiForbiddenResponse(apiSchema.getNonce.forbidden || defaultForbidden)
   @ApiBadRequestResponse(apiSchema.getNonce.badRequest || defaultBadRequest)
   @ApiImplicitHeaders(apiSchema.getNonce.headers || defaultHeaders)
-  @ApiImplicitBody(implicitBody(GetBaseInfoRequest))
+  @ApiImplicitBody(implicitBody(GetNonceRequest))
   @Post('/get_nonce')
-  async getNonce(@Body() dto: GetBaseInfoRequest, @Request() r: HttpRequest) {
+  async getNonce(@Body() dto: GetNonceRequest, @Request() r: HttpRequest) {
     console.log('getting nonce');
     return this.apiService.getKeyNonce(dto, r);
   }

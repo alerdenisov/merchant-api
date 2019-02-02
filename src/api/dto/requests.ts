@@ -71,6 +71,14 @@ class PaginatedRequest extends BaseApiRequest {
   public newer: number;
 }
 
+export class GetNonceRequest {
+  @ApiModelProperty({
+    description: 'Merchant API public key',
+    required: true,
+  })
+  public key: string;
+}
+
 export class GetBaseInfoRequest extends BaseApiRequest {}
 
 export class GetRatesRequest extends BaseApiRequest {

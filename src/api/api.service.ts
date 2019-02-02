@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { GetBaseInfoRequest } from './dto/requests';
+import { GetBaseInfoRequest, GetNonceRequest } from './dto/requests';
 import { Request } from 'express';
 import * as joi from 'joi';
 
@@ -9,7 +9,7 @@ export class ApiService {
     return (<any>r).merchant;
   }
 
-  getKeyNonce(dto: GetBaseInfoRequest, r: Request): any {
+  getKeyNonce(dto: GetNonceRequest, r: Request): any {
     const { merchantKey } = <any>r;
     return joi.validate(
       merchantKey,

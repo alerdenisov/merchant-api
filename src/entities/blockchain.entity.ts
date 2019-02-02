@@ -13,6 +13,7 @@ import {
 import { CurrencyEntity } from 'entities/currency.entity';
 import { DepositAddressEntity } from './deposit-address.entity';
 import { ExtendedRepository } from './extended-repository';
+import { InvoiceEntity } from './invoice.entity';
 
 export enum BlockchainStatus {
   Online = 0,
@@ -72,6 +73,9 @@ export class BlockchainEntity {
 
   @OneToMany(type => CurrencyEntity, coin => coin.blockchain)
   currencies: CurrencyEntity[];
+
+  @OneToMany(type => InvoiceEntity, invoice => invoice.currency)
+  invoices: InvoiceEntity[];
 
   @OneToMany(type => CurrencyEntity, coin => coin.blockchain)
   addresses: DepositAddressEntity[];

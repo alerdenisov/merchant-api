@@ -16,9 +16,6 @@ export interface BlockModel {
 
 export abstract class BlockchainClient {
   ready: boolean;
-
-  constructor(@Inject('chain') protected readonly key: string) {}
-
   readonly blockNumber: number;
   abstract getBlockNumber(): Promise<number>;
   abstract getBalance(

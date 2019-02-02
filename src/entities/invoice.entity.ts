@@ -14,40 +14,23 @@ import {
   In,
   SelectQueryBuilder,
   OneToOne,
+  JoinColumn,
+  JoinTable,
 } from 'typeorm';
-import { IsIn } from 'class-validator';
+import { IsIn, IsNumberString } from 'class-validator';
 import { CurrencyEntity } from 'entities/currency.entity';
-import { MerchantEntity } from './merchant.entity';
-import { DepositAddressEntity } from './deposit-address.entity';
-import { ExtendedRepository } from './extended-repository';
+import { MerchantEntity } from 'entities/merchant.entity';
+import { DepositAddressEntity } from 'entities/deposit-address.entity';
+import { NotificationEntity } from 'entities/nofitication.entity';
+import { ExtendedRepository } from 'entities/extended-repository';
+import { BlockchainEntity } from './blockchain.entity';
 
 export enum InvoiceStatus {
   Created = 'created',
-  Expired = 'expired',
   Pending = 'pending',
   Confirmating = 'confirmating',
+  Expired = 'expired',
   Paid = 'paid',
-}
-
-@Entity()
-export class NotificationEntity {
-  @PrimaryGeneratedColumn() id: number;
-
-  @ManyToOne(type => InvoiceEntity, invoice => invoice.notifications)
-  invoice: InvoiceEntity;
-
-  @Index()
-  @Column({ default: 0 })
-  status: number;
-
-  @Column('tinyint')
-  tries: number;
-
-  @Column()
-  ipn: string;
-
-  @Column()
-  payload: string;
 }
 
 @Entity()
@@ -61,6 +44,9 @@ export class InvoiceEntity {
   @ManyToOne(type => CurrencyEntity, currency => currency.invoices)
   currency: CurrencyEntity;
 
+  @ManyToOne(type => BlockchainEntity, chain => chain.invoices)
+  blockchain: BlockchainEntity;
+
   @ManyToOne(type => MerchantEntity, merchant => merchant.invoices)
   merchant: MerchantEntity;
 
@@ -70,7 +56,7 @@ export class InvoiceEntity {
   @UpdateDateColumn()
   updated_at: Date;
 
-  @Column('datetime', { nullable: true })
+  @Column('datetime')
   expires: Date;
 
   @Column({ nullable: true })
@@ -80,25 +66,53 @@ export class InvoiceEntity {
   notifications: NotificationEntity[];
 
   @OneToOne(type => DepositAddressEntity, deposit => deposit.invoice)
+  @JoinColumn()
   depositAddress: DepositAddressEntity;
 
-  @Column('enum', { enum: InvoiceStatus })
+  @Index()
+  @Column('enum', { enum: InvoiceStatus, default: InvoiceStatus.Pending })
   status: InvoiceStatus;
 
   @Column()
-  total: number;
+  @IsNumberString()
+  total: string;
 
-  @Column()
-  confirmation_block: number;
+  @Column({ default: '0' })
+  paid: string;
 
   @Column({ default: 0 })
-  paid: number;
+  confirmation_block: number;
 }
 
 @EntityRepository(InvoiceEntity)
 export class InvoiceRepository extends ExtendedRepository<InvoiceEntity> {
-  findPending(...populate: Array<keyof InvoiceEntity>) {
+  getList(
+    merchant: MerchantEntity,
+    start: number,
+    limit: number,
+    newer: number,
+    ...populate: Array<keyof InvoiceEntity>
+  ) {
+    console.log(merchant);
+    return this.populate(
+      this.begin()
+        .where({
+          merchant,
+          status: In([InvoiceStatus.Pending, InvoiceStatus.Confirmating]),
+        })
+        .orderBy(this.metadata.name + '.created_at')
+        .skip(start)
+        .limit(limit),
+      populate,
+    );
+  }
+
+  findPending(
+    chain: BlockchainEntity,
+    ...populate: Array<keyof InvoiceEntity>
+  ) {
     let query = this.begin().where({
+      blockchain: chain,
       status: In([InvoiceStatus.Pending, InvoiceStatus.Confirmating]),
     });
 

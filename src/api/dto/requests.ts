@@ -50,7 +50,7 @@ class PaginatedRequest extends BaseApiRequest {
     description:
       'The maximum number of items to return from 1-100. (default: 25)',
   })
-  public limit: number;
+  public limit?: number;
 
   @ApiModelProperty({
     type: Number,
@@ -59,7 +59,7 @@ class PaginatedRequest extends BaseApiRequest {
     description:
       'Amount of items to skip before return (default: 0, starts from first entry)',
   })
-  public start: number;
+  public start?: number;
 
   @ApiModelProperty({
     type: Number,
@@ -68,7 +68,7 @@ class PaginatedRequest extends BaseApiRequest {
     description:
       'Return items created at the given Unix timestamp or later. (default: 0)',
   })
-  public newer: number;
+  public newer?: number;
 }
 
 export class GetNonceRequest {
@@ -137,21 +137,6 @@ export class CreateTransactionRequest extends BaseApiRequest {
 
   @ApiModelProperty({
     description:
-      'The currency what will be add to your balance after automatic conversion',
-    required: false,
-  })
-  @IsIn(process.env.CURRENCIES)
-  public convertion?: string;
-
-  @ApiModelProperty({
-    description:
-      "Set the buyer's email address. This will let us send them a notice if they underpay or need a refund. We will not add them to our mailing list or spam them or anything like that",
-    required: true,
-  })
-  public buyer_email: string;
-
-  @ApiModelProperty({
-    description:
       'URL for your IPN callbacks. If not set it will use the IPN URL in your Edit Settings page if you have one set',
     required: false,
   })
@@ -163,7 +148,7 @@ export class CreateTransactionRequest extends BaseApiRequest {
       'Array of fields for your use, will be on the payment information page and in the IPNs for the transaction.',
     required: false,
   })
-  custom: string[];
+  custom?: string[];
 }
 
 export class CallbackAddressRequest extends BaseApiRequest {

@@ -23,7 +23,6 @@ export class NonceRequestGuard implements CanActivate {
   }
 
   async canActivate(context: ExecutionContext): Promise<boolean> {
-    console.log('nonce guard ', context);
     const request = context.switchToHttp().getRequest() as any;
 
     return this.client

@@ -10,6 +10,7 @@ export class ServiceModule {
       | Promise<DynamicModule>
       | ForwardReference,
   ): DynamicModule {
+    console.log(service);
     return {
       module: ServiceModule,
       imports: [

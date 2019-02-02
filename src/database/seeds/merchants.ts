@@ -1,11 +1,13 @@
-import { EntityManager } from 'typeorm';
+import { EntityManager, Connection } from 'typeorm';
 import { MerchantEntity } from 'entities/merchant.entity';
 import { ApiKeyEntity } from 'entities/api_keys.entity';
 import * as ethers from 'ethers';
 
-export async function seed(manager: EntityManager): Promise<void> {
-  const merchants = await manager.getRepository<MerchantEntity>(MerchantEntity);
-  const apiKeys = await manager.getRepository<ApiKeyEntity>(ApiKeyEntity);
+export async function seed(connection: Connection): Promise<void> {
+  const merchants = await connection.getRepository<MerchantEntity>(
+    MerchantEntity,
+  );
+  const apiKeys = await connection.getRepository<ApiKeyEntity>(ApiKeyEntity);
 
   const maincoin = merchants.create();
   maincoin.email = 'admin@maincoin.money';

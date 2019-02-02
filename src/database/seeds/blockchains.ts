@@ -1,8 +1,8 @@
 import { BlockchainEntity, BlockchainStatus } from 'entities/blockchain.entity';
-import { EntityManager } from 'typeorm';
+import { EntityManager, Connection } from 'typeorm';
 
-export async function seed(manager: EntityManager): Promise<void> {
-  const blockchainRepository = await manager.getRepository<BlockchainEntity>(
+export async function seed(connection: Connection): Promise<void> {
+  const blockchainRepository = await connection.getRepository<BlockchainEntity>(
     BlockchainEntity,
   );
 
@@ -19,19 +19,36 @@ export async function seed(manager: EntityManager): Promise<void> {
       name: 'Ethereum',
     },
     {
-      client: 'rinkeby',
-      server: 'htttps://rinkeby.infura.io',
+      client: 'ethereum',
+      server: 'https://rinkeby.infura.io',
       key: 'rinkeby',
       min_confirmations: 1,
       status: BlockchainStatus.Online,
       name: 'Ethereum Testnet',
+    },
+    {
+      client: 'ethereum',
+      server: 'http://devnet:8545',
+      key: 'devnet',
+      min_confirmations: 1,
+      status: BlockchainStatus.Online,
+      name: 'Ethereum Development Network',
     },
   ];
 
   await blockchainRepository.save(
     chains.map(proto => {
       const entity = blockchainRepository.create();
-      return Object.assign(entity, {} as Partial<BlockchainEntity>, proto);
+      return Object.assign(
+        entity,
+        {
+          _meta: '{}',
+        } as Partial<BlockchainEntity>,
+        proto,
+      );
     }),
+    {
+      transaction: false,
+    },
   );
 }

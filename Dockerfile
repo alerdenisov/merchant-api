@@ -1,6 +1,9 @@
-FROM node:10
+FROM node:10-alpine
+RUN apk add --no-cache --update \
+    git
 WORKDIR /usr/src/app
 COPY package.json . 
-RUN npm install
+RUN yarn
 COPY . .
-CMD npm run start:prod
+RUN chmod +x dev-run.sh
+CMD yarn start:prod

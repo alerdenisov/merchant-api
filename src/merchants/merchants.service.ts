@@ -13,6 +13,7 @@ import {
   DepositAddressEntity,
   DepositAddressRepository,
 } from 'entities/deposit-address.entity';
+import bn from 'bignumber.js';
 
 @Injectable()
 export class MerchantsService {
@@ -83,13 +84,14 @@ export class MerchantsService {
     // total: number;
     // confirmation_block: number;
     // paid: number;
-    const currencies = await this.currenciesRepository.find({
+    const currencyEntity = await this.currenciesRepository.findOne({
+      relations: ['blockchain'],
       where: {
         symbol: currency,
       },
     });
 
-    if (!currencies.length) {
+    if (!currency) {
       throw Boom.notFound('Currency not found');
     }
 
@@ -98,14 +100,45 @@ export class MerchantsService {
     }
 
     const invoice = this.invoiceRepository.create();
+    invoice.total = new bn(total)
+      .times(new bn(10).pow(currencyEntity.decimals))
+      .toString(10);
+
     invoice.key = shortid.generate();
-    invoice.currency = currencies[0];
+    invoice.expires = new Date(Date.now() + 1000 * 60 * 60 * 24);
+    invoice.currency = currencyEntity;
+    invoice.blockchain = currencyEntity.blockchain;
     invoice.merchant = merchant;
     invoice.ipn = ipn || invoice.merchant.ipn;
     invoice.depositAddress = await this.depositAddressRepository.createRandom(
-      currencies[0],
+      currencyEntity,
       merchant,
     );
+
     return this.invoiceRepository.save(invoice);
+  }
+
+  async getInvoices({
+    merchant,
+    limit,
+    start,
+    newer,
+  }: {
+    merchant: MerchantEntity;
+    limit: number;
+    start: number;
+    newer: number;
+  }): Promise<any> {
+    return this.invoiceRepository
+      .getList(
+        merchant,
+        start,
+        limit,
+        newer,
+        'depositAddress',
+        'blockchain',
+        'currency',
+      )
+      .getMany();
   }
 }

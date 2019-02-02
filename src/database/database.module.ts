@@ -3,28 +3,36 @@ import {
   TypeOrmModuleOptions,
   TypeOrmOptionsFactory,
 } from '@nestjs/typeorm';
-import { DynamicModule, Type } from '@nestjs/common';
-import { DatabaseService } from 'database/database.service';
+import { DynamicModule, Type, Inject, Injectable } from '@nestjs/common';
+import { DatabaseDaemon } from 'database/database.daemon';
 import { Connection } from 'typeorm';
-import { seed } from 'database/seed.service';
+import { TypeormConfig } from 'typeorm-config';
+import { InvoiceRepository, InvoiceEntity } from 'entities/invoice.entity';
+import {
+  NotificationEntity,
+  NotificationRepository,
+} from 'entities/nofitication.entity';
+import {
+  BlockchainEntity,
+  BlockchainEntityRepository,
+} from 'entities/blockchain.entity';
+
+@Injectable()
+export class DatabaseClient {
+  constructor(private readonly connection: Connection) {
+    console.log(connection);
+  }
+}
 
 export class DatabaseModule {
-  public static async forRoot(
+  static async forRoot(
     func: Type<TypeOrmOptionsFactory>,
   ): Promise<DynamicModule> {
+    await new Promise(resolve => setTimeout(resolve, 1));
     // Seed db in dev mode
-    if (process.env.NODE_ENV === 'development') {
-      const seedConnection = await new Connection(<any>(
-        new func().createTypeOrmOptions()
-      )).connect();
-
-      await seed(seedConnection);
-    }
-
     return {
       module: DatabaseModule,
-      components: [DatabaseService],
-      exports: [DatabaseService],
+      providers: [DatabaseDaemon],
     };
   }
 }

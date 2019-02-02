@@ -16,11 +16,10 @@ import { EventDescription, FunctionDescription } from 'ethers/utils';
 export default class EthereumClient extends BlockchainClient {
   static TOKEN_ABI = [
     'event Transfer(address from, address to, uint256 amount)',
-    'function balanceOf(address owner)',
+    'function balanceOf(address owner) view returns (uint256)',
     'function transfer(address to, uint256 amount)',
   ];
 
-  chain: BlockchainEntity;
   provider: ethers.providers.BaseProvider;
   contracts: {
     [symbol: string]: ethers.Contract;
@@ -29,21 +28,16 @@ export default class EthereumClient extends BlockchainClient {
   constructor(
     @InjectRepository(BlockchainEntityRepository)
     private readonly blockchainsRepository: BlockchainEntityRepository,
-    @Inject('chain') key: string,
+    private readonly chain: BlockchainEntity,
   ) {
-    super(key);
+    super();
     this.initialize();
   }
 
   private async initialize() {
     // TODO: healthcheck
     await new Promise(resolve => setTimeout(resolve, 1500));
-
-    this.chain = await this.blockchainsRepository
-      .get(this.key, 'currencies')
-      .getOne();
-
-    console.log(this.chain);
+    console.log(`${this.chain.key}: ${this.chain.server}`);
 
     this.provider = new ethers.providers.JsonRpcProvider(
       this.chain.server,
@@ -67,6 +61,10 @@ export default class EthereumClient extends BlockchainClient {
     return this.provider.getBlockNumber();
   }
 
+  get blockNumber(): number {
+    return this.provider.blockNumber;
+  }
+
   async getBalance(
     currency: CurrencyEntity,
     depositAddress: DepositAddressEntity,
@@ -76,9 +74,10 @@ export default class EthereumClient extends BlockchainClient {
       throw new Error('not implemented');
     }
 
-    return this.contracts[currency.symbol].functions['balanceOf'](
-      depositAddress.address,
-    );
+    console.log(depositAddress.address);
+    return this.contracts[currency.symbol]
+      .balanceOf(depositAddress.address)
+      .then((b: bn) => new bn(b.toString(10)));
 
     // return EthereumClient.TOKEN_BALANCE.decode(
     //   this.provider.call({

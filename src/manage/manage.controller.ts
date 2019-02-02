@@ -6,6 +6,7 @@ import {
   ApiModelProperty,
   ApiModelPropertyOptional,
 } from '@nestjs/swagger';
+import { ApiKeyEntity } from 'entities/api_keys.entity';
 
 export class GetBlockchainsRequest {
   @ApiModelPropertyOptional({
@@ -23,7 +24,7 @@ export class ManageController {
     return this.service.getBlockchains();
   }
   @Get('/keys')
-  public getKeys(): Promise<BlockchainEntity[]> {
+  public getKeys(): Promise<ApiKeyEntity[]> {
     return this.service.getKeys();
   }
 }

@@ -10,6 +10,9 @@ import { BlockchainModule } from 'blockchains/blockchain.module';
 import { ApiModule } from 'api/api.module';
 import { ServiceModule } from 'service.module';
 import { Type, DynamicModule, ForwardReference } from '@nestjs/common';
+import { TypeormConfig } from 'typeorm-config';
+import { ManageModule } from 'manage/manage.module';
+import { NotificationModule } from 'notifications/notifications.module';
 
 const packageJson: {
   version: string;
@@ -19,14 +22,30 @@ export const services: {
   [service: string]:
     | Type<any>
     | DynamicModule
-    | Promise<DynamicModule>
-    | ForwardReference;
+    | ((args?: string[]) => DynamicModule)
+    | ((args?: string[]) => Promise<DynamicModule>)
+    | Promise<DynamicModule>;
 } = {
-  database: DatabaseModule,
+  seedb: (args?: string[]) => DatabaseModule.forRoot(TypeormConfig),
   merchant: MerchantsModule,
-  ethereum: BlockchainModule.forRoot('ethereum'),
+  blockchain: (args?: string[]) =>
+    BlockchainModule.forRoot(args[args.length - 2]),
   api: ApiModule,
+  notification: NotificationModule,
 };
+
+function isConstructor<T>(f: Function | Type<T>): f is Type<T> {
+  try {
+    new new Proxy(<any>f, {
+      construct() {
+        return {};
+      },
+    })();
+    return true;
+  } catch (err) {
+    return false;
+  }
+}
 
 export async function bootstrap() {
   const args = Array.from(process.argv);
@@ -39,11 +58,6 @@ export async function bootstrap() {
       api.enableCors({
         origin: '*',
       });
-      // api.use(
-      //   cors({
-      //     origin: '*',
-      //   }),
-      // );
 
       api.connectMicroservice({
         transport: Transport.REDIS,
@@ -66,8 +80,19 @@ export async function bootstrap() {
 
       api.listen(process.env.PORT);
     } else {
+      const serviceRef = services[service];
+      let module:
+        | Type<any>
+        | DynamicModule
+        | Promise<DynamicModule>
+        | ForwardReference;
+      if (typeof serviceRef === 'function' && !isConstructor(serviceRef)) {
+        module = serviceRef(args);
+      } else {
+        module = serviceRef;
+      }
       const serviceApp = await NestFactory.createMicroservice(
-        ServiceModule.forRoot(services[service]),
+        ServiceModule.forRoot(module),
         {
           transport: Transport.REDIS,
           options: {

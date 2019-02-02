@@ -13,9 +13,9 @@ function clearDb(connection: Connection) {
 
 export async function seed(connection: Connection) {
   await clearDb(connection);
-  const transaction = connection.transaction(async em => {
-    await blockchains(em);
-    await currencies(em);
-    await merchants(em);
-  });
+  // const transaction = connection.transaction(async em => {
+  await blockchains(connection);
+  await currencies(connection);
+  await merchants(connection);
+  // });
 }

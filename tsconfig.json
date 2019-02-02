@@ -8,7 +8,7 @@
     "removeComments": true,
     "emitDecoratorMetadata": true,
     "experimentalDecorators": true,
-    "target": "es5",
+    "target": "es6",
     "sourceMap": false,
     "outDir": "dist",
     "baseUrl": "src",
@@ -16,6 +16,11 @@
     "typeRoots": ["node_modules/@types", "src/types"],
     "plugins": [{ "transform": "ts-transformer-imports" }]
   },
-  "files": ["src/index.ts", "src/types/index.d.ts"],
+  "files": [
+    "src/index.ts",
+    "src/types/index.d.ts",
+    "src/blockchains/ethereum/ethereum.client.ts"
+  ],
+  "include": ["src/**/*.ts"],
   "exclude": ["node_modules"]
 }

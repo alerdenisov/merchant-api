@@ -4,7 +4,7 @@ export class TypeormConfig implements TypeOrmOptionsFactory {
     return Object.assign(
       {
         synchronize: true,
-        logging: true,
+        logging: false,
       },
       {
         type: <any>process.env.DATABASE_TYPE,

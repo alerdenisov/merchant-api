@@ -1,4 +1,4 @@
-import { DynamicModule, Inject } from '@nestjs/common';
+import { DynamicModule, Inject, Type } from '@nestjs/common';
 import { Connection, Repository, In, UpdateResult } from 'typeorm';
 import {
   BlockchainEntity,
@@ -13,35 +13,50 @@ import {
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { BlockchainDemon } from './blockchain.demon';
 import { TypeormConfig } from 'typeorm-config';
-
-function keyToClass(key: string): new () => BlockchainClient {
-  return require(`./${key}/${key}.client`).default;
-}
-
-function makeBlockchainClientProvider(key: string) {
-  return {
-    provide: BlockchainClient,
-    useClass: keyToClass(key),
-  };
-}
+import {
+  NotificationEntity,
+  NotificationRepository,
+} from 'entities/nofitication.entity';
 
 export class BlockchainModule {
-  static forRoot(key: string): DynamicModule {
-    const keyProvider = {
-      provide: 'chain',
-      useValue: key,
-    };
+  static async forRoot(key: string): Promise<DynamicModule> {
+    const temporaryConnection = new Connection(
+      new TypeormConfig().createTypeOrmOptions(),
+    );
+    const connection = await temporaryConnection.connect();
+    if (!connection.isConnected) {
+      throw new Error('unable to connect');
+    }
+    const repository = connection.getCustomRepository<
+      BlockchainEntityRepository
+    >(BlockchainEntityRepository);
+
+    const chain = await repository.get(key, 'currencies').getOne();
+
+    if (!chain) {
+      throw new Error('Chain not found!');
+    }
+
     return {
       module: BlockchainModule,
       providers: [
-        makeBlockchainClientProvider(key),
+        {
+          provide: BlockchainEntity,
+          useValue: chain,
+        },
+        {
+          provide: BlockchainClient,
+          useClass: require(`./${chain.client}/${chain.client}.client`)
+            .default as Type<BlockchainClient>,
+        },
         BlockchainDemon,
-        keyProvider,
       ],
       imports: [
         TypeOrmModule.forFeature([
           InvoiceEntity,
           InvoiceRepository,
+          NotificationEntity,
+          NotificationRepository,
           BlockchainEntity,
           BlockchainEntityRepository,
         ]),

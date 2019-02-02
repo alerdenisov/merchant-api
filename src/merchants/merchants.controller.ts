@@ -16,6 +16,28 @@ export class MerchantsController {
     console.log('merch sevice');
   }
 
+  @MessagePattern({ service: 'merchant', cmd: 'getInvoice' })
+  async getInvoice({ id, populate }: { id: string; populate: boolean }) {}
+
+  @MessagePattern({ service: 'merchant', cmd: 'getInvoices' })
+  async getInvoices({
+    merchant,
+    limit = 15,
+    start = 0,
+    newer = 0,
+  }: {
+    merchant: MerchantEntity;
+    limit?: number;
+    start?: number;
+    newer?: number;
+  }) {
+    return this.service.getInvoices({
+      merchant,
+      limit,
+      start,
+      newer,
+    });
+  }
   @MessagePattern({ service: 'merchant', cmd: 'findById' })
   findById(id: number) {
     console.log('call');

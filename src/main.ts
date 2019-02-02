@@ -69,7 +69,12 @@ export async function bootstrap() {
       const serviceApp = await NestFactory.createMicroservice(
         ServiceModule.forRoot(services[service]),
         {
-          transport: Transport.TCP,
+          transport: Transport.REDIS,
+          options: {
+            url: process.env.REDIS_URL,
+            retryAttempts: process.env.MICROSERVICES_RETRY_ATTEMPTS,
+            retryDelay: process.env.MICROSERVICES_RETRY_DELAYS,
+          },
         },
       );
       serviceApp.listen(() => console.log(`service ${service} is started`));

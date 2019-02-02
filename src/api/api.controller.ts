@@ -5,6 +5,7 @@ import {
   Get,
   UseGuards,
   Request,
+  CanActivate,
 } from '@nestjs/common';
 import { ApiService } from 'api/api.service';
 import {
@@ -42,6 +43,7 @@ import {
   CreateTransferResponse,
   CreateWithdrawalResponse,
   WithdrawalInfoResponse,
+  GetNonceResponse,
 } from 'api/dto/responses';
 import { AuthenticationError, ValidationApiError } from 'api/dto/errors';
 import { Client, ClientProxy, Transport } from '@nestjs/microservices';
@@ -66,6 +68,7 @@ interface MethodImplicitHeadersMeta {
 }
 
 interface MethodSchema {
+  guards?: Array<Function | CanActivate>;
   operation: MethodOperationMeta;
   ok: MethodResponseMeta;
   forbidden?: MethodResponseMeta;
@@ -89,8 +92,13 @@ const defaultHeaders = [
     description: 'Payload signature based on merchant secret phrase',
   },
 ];
+const defaultGuards: Array<Function | CanActivate> = [
+  MerchantGuard,
+  NonceRequestGuard,
+  SignedRequestGuard,
+];
 
-const apiSchema: { [method in methods]?: MethodSchema } = {
+const apiSchema: { [method in methods]: MethodSchema } = {
   getBasicInfo: {
     operation: {
       title: 'Get basic account information',
@@ -100,6 +108,16 @@ const apiSchema: { [method in methods]?: MethodSchema } = {
     ok: {
       description: 'The bacis information has been successefully received',
       type: GetBasicInfoResponse,
+    },
+  },
+  getNonce: {
+    operation: {
+      title: 'Get api key nonce',
+      description: 'Return current nonce of providen key',
+    },
+    ok: {
+      description: 'The nonce has been successefully received',
+      type: GetNonceResponse,
     },
   },
   getRates: {
@@ -244,15 +262,12 @@ function implicitBody<TRequest>(func: new () => TRequest) {
   };
 }
 
-// @UseGuards(MerchantGuard, NonceRequestGuard, SignedRequestGuard)
 @Controller('api')
 export class ApiController {
-  @Client({ transport: Transport.TCP })
-  client: ClientProxy;
-
   constructor(private readonly apiService: ApiService) {}
 
   // Info
+  @UseGuards(...(apiSchema.getBasicInfo.guards || defaultGuards))
   @ApiOperation(apiSchema.getBasicInfo.operation)
   @ApiOkResponse(apiSchema.getBasicInfo.ok)
   @ApiForbiddenResponse(apiSchema.getBasicInfo.forbidden || defaultForbidden)
@@ -267,12 +282,12 @@ export class ApiController {
     return this.apiService.getInfo(dto, r);
   }
 
-  @UseGuards(MerchantGuard, SignedRequestGuard)
-  @ApiOperation(apiSchema.getBasicInfo.operation)
-  @ApiOkResponse(apiSchema.getBasicInfo.ok)
-  @ApiForbiddenResponse(apiSchema.getBasicInfo.forbidden || defaultForbidden)
-  @ApiBadRequestResponse(apiSchema.getBasicInfo.badRequest || defaultBadRequest)
-  @ApiImplicitHeaders(apiSchema.getBasicInfo.headers || defaultHeaders)
+  @UseGuards(...(apiSchema.getNonce.guards || defaultGuards))
+  @ApiOperation(apiSchema.getNonce.operation)
+  @ApiOkResponse(apiSchema.getNonce.ok)
+  @ApiForbiddenResponse(apiSchema.getNonce.forbidden || defaultForbidden)
+  @ApiBadRequestResponse(apiSchema.getNonce.badRequest || defaultBadRequest)
+  @ApiImplicitHeaders(apiSchema.getNonce.headers || defaultHeaders)
   @ApiImplicitBody(implicitBody(GetBaseInfoRequest))
   @Post('/get_nonce')
   async getNonce(@Body() dto: GetBaseInfoRequest, @Request() r: HttpRequest) {
@@ -280,6 +295,7 @@ export class ApiController {
     return this.apiService.getKeyNonce(dto, r);
   }
 
+  @UseGuards(...(apiSchema.getRates.guards || defaultGuards))
   @ApiOperation(apiSchema.getRates.operation)
   @ApiOkResponse(apiSchema.getRates.ok)
   @ApiForbiddenResponse(apiSchema.getRates.forbidden || defaultForbidden)
@@ -291,6 +307,7 @@ export class ApiController {
     return null;
   }
 
+  @UseGuards(...(apiSchema.getBalances.guards || defaultGuards))
   @ApiOperation(apiSchema.getBalances.operation)
   @ApiOkResponse(apiSchema.getBalances.ok)
   @ApiForbiddenResponse(apiSchema.getBalances.forbidden || defaultForbidden)

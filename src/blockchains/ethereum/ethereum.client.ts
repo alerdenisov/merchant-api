@@ -43,6 +43,8 @@ export default class EthereumClient extends BlockchainClient {
       .get(this.key, 'currencies')
       .getOne();
 
+    console.log(this.chain);
+
     this.provider = new ethers.providers.JsonRpcProvider(
       this.chain.server,
       this.chain.meta ? this.chain.meta['eth_chainId'] : undefined,

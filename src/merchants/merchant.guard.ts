@@ -25,7 +25,7 @@ export class MerchantGuard implements CanActivate {
   }
 
   async canActivate(context: ExecutionContext): Promise<boolean> {
-    const request = context.switchToHttp().getRequest() as Request;
+    const request = context.switchToHttp().getRequest() as any;
 
     return this.client
       .connect()

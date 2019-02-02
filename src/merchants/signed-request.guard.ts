@@ -18,7 +18,8 @@ export class SignedRequestGuard implements CanActivate {
   }
 
   async canActivate(context: ExecutionContext): Promise<boolean> {
-    const request = context.switchToHttp().getRequest() as Request;
+    console.log('signature guard ', context);
+    const request = context.switchToHttp().getRequest() as any;
 
     return this.client
       .connect()
@@ -37,6 +38,7 @@ export class SignedRequestGuard implements CanActivate {
           )
           .toPromise(),
       )
+      .then(() => true)
       .catch(e => false);
   }
 }

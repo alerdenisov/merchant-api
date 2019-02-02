@@ -14,6 +14,7 @@ import {
   BlockchainEntity,
   BlockchainEntityRepository,
 } from 'entities/blockchain.entity';
+import { TypeormConfig } from 'typeorm-config';
 
 @Module({
   providers: [MerchantsService],

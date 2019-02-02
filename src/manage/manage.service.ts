@@ -20,10 +20,9 @@ export class ManageService {
       ),
     };
   }
+
   getKeys(): Promise<ApiKeyEntity[]> {
-    return this.repositories.apiKeys
-      .findByPublic('1155693E1be4e6dc94c1D592c2Ff7bD8B060497c')
-      .getMany();
+    return this.repositories.apiKeys.begin().getMany();
   }
 
   getBlockchains(currencies?: boolean): Promise<BlockchainEntity[]> {

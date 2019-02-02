@@ -244,7 +244,7 @@ function implicitBody<TRequest>(func: new () => TRequest) {
   };
 }
 
-@UseGuards(MerchantGuard, NonceRequestGuard, SignedRequestGuard)
+// @UseGuards(MerchantGuard, NonceRequestGuard, SignedRequestGuard)
 @Controller('api')
 export class ApiController {
   @Client({ transport: Transport.TCP })
@@ -276,6 +276,7 @@ export class ApiController {
   @ApiImplicitBody(implicitBody(GetBaseInfoRequest))
   @Post('/get_nonce')
   async getNonce(@Body() dto: GetBaseInfoRequest, @Request() r: HttpRequest) {
+    console.log('getting nonce');
     return this.apiService.getKeyNonce(dto, r);
   }
 

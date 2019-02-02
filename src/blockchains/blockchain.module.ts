@@ -12,6 +12,7 @@ import {
 } from 'entities/invoice.entity';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { BlockchainDemon } from './blockchain.demon';
+import { TypeormConfig } from 'typeorm-config';
 
 function keyToClass(key: string): new () => BlockchainClient {
   return require(`./${key}/${key}.client`).default;

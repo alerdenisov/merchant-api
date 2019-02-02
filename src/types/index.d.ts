@@ -13,5 +13,7 @@ declare namespace NodeJS {
 
     MICROSERVICES_RETRY_ATTEMPTS: number;
     MICROSERVICES_RETRY_DELAYS: number;
+
+    REDIS_URL: string;
   }
 }

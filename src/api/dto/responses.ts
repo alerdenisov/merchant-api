@@ -113,6 +113,20 @@ export class CurrencyResponse {
   public capabilities: ['payments' | 'wallet' | 'transfers' | 'convert'];
 }
 
+export class GetNonceResponse {
+  @ApiModelProperty({
+    required: true,
+    description: 'Public key of the mercant',
+  })
+  public_key: string;
+
+  @ApiModelProperty({
+    required: true,
+    description: 'Current nonce of provided key',
+  })
+  nonce: number;
+}
+
 export class GetRatesResponse {
   @ApiModelProperty({
     isArray: true,

@@ -29,13 +29,6 @@ services:
       - 6379:6379
     environment:
       ALLOW_EMPTY_PASSWORD: 'yes'
-    volumes:
-      - ./tmp/redis:/bitnami/redis/data
-    healthcheck:
-      test: echo "test"
-      interval: 0.5s
-      timeout: 1s
-      retries: 10
 
   devnet:
     # docker run -p 8545:8545 -p 8546:8546 smartcontract/devnet --config /devnet/miner.toml --force-sealing

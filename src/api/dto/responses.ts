@@ -1,31 +1,65 @@
 import { ApiModelProperty } from '@nestjs/swagger';
-import { IsNumberString, IsIn } from 'class-validator';
+import {
+  IsNumberString,
+  IsIn,
+  IsEmail,
+  IsPositive,
+  IsInt,
+  IsOptional,
+  IsDate,
+  IsUrl,
+} from 'class-validator';
 
 export class GetBasicInfoResponse {
-  @ApiModelProperty({
-    description: 'Merchant username',
-    required: true,
-  })
-  username: string;
+  // @ApiModelProperty({
+  //   description: 'Merchant username',
+  //   required: true,
+  // })
+  // username: string;
+
+  // merchant_id: string;
+
+  // email: string;
+
+  // public_name: string;
 
   @ApiModelProperty({
-    description: 'Merchant ID (use this to make call)',
+    description: 'Merchant ID (use this to make call to manage api)',
     required: true,
   })
-  merchant_id: string;
+  @IsPositive()
+  @IsInt()
+  public id: number;
 
   @ApiModelProperty({
     description: 'Merchant contract email address (setupped in admin panel)',
     required: true,
   })
-  email: string;
+  @IsEmail()
+  public email: string;
 
   @ApiModelProperty({
     description: 'Merchant public display name (May be blank if not set)',
     required: false,
     default: '',
   })
-  public_name: string;
+  @IsOptional()
+  public displayName?: string;
+
+  @ApiModelProperty({
+    description: 'Merchant registration date (can be used as a proof of trust)',
+  })
+  @IsDate()
+  public createdAt: Date;
+
+  @ApiModelProperty({
+    description: 'Merchant default notification url (May be blank if not set)',
+    required: false,
+    default: '',
+  })
+  @IsOptional()
+  @IsUrl()
+  public ipn?: string | null;
 }
 
 export class CurrencyResponse {
@@ -183,6 +217,123 @@ export class GetDepositAddressResponse {
   public tag: string;
 }
 
+// export const exampleCreateTransactionResponse = {
+//   total: '100000000000000000000',
+//   key: 'Z0vvme75B',
+//   expires: '2019-02-04T07:25:09.584Z',
+//   currency: {
+//     id: 3,
+//     symbol: 'tmnc',
+//     name: 'Test Maincoin',
+//     decimals: 18,
+//     is_fiat: false,
+//     rate_btc: 0,
+//     rate_usd: 0,
+//     rate_mnc: 0,
+//     create_at: '2019-02-02T18:48:46.058Z',
+//     update_at: '2019-02-02T18:48:46.058Z',
+//     receive_fee: 0,
+//     send_fee: 0,
+//     status: 0,
+//     confirms: 12,
+//     capabilities_payments: true,
+//     capabilities_wallet: true,
+//     capabilities_transfers: true,
+//     capabilities_convert: true,
+//     _meta:
+//       '{"eth_erc20":true,"eth_contractAddress":"0xacfbbebe1736e2bea98975220ac5a7fb37825bc9"}',
+//     blockchain: {
+//       id: 3,
+//       key: 'devnet',
+//       name: 'Ethereum Development Network',
+//       client: 'ethereum',
+//       server: 'http://devnet:8545',
+//       height: 0,
+//       min_confirmations: 1,
+//       status: 0,
+//       created_at: '2019-02-02T18:48:46.028Z',
+//       updated_at: '2019-02-02T18:48:46.028Z',
+//       _meta: '{}',
+//     },
+//   },
+//   blockchain: {
+//     id: 3,
+//     key: 'devnet',
+//     name: 'Ethereum Development Network',
+//     client: 'ethereum',
+//     server: 'http://devnet:8545',
+//     height: 0,
+//     min_confirmations: 1,
+//     status: 0,
+//     created_at: '2019-02-02T18:48:46.028Z',
+//     updated_at: '2019-02-02T18:48:46.028Z',
+//     _meta: '{}',
+//   },
+//   merchant: {
+//     id: 1,
+//     email: 'admin@maincoin.money',
+//     displayName: 'Maincoin MerchantEntity',
+//     createdAt: '2019-02-02T18:48:46.069Z',
+//     ipn: null,
+//   },
+//   ipn: 'http://localhost:4000/api/notify',
+//   depositAddress: {
+//     privateKey:
+//       '0xe72a26990305112a823a56c458d017af325bf0745ef0c88ea627be4a852b046d',
+//     address: '0xb5c5fAD61C25B1867AaB5Ee06480ABCd6742FE50',
+//     currency: {
+//       id: 3,
+//       symbol: 'tmnc',
+//       name: 'Test Maincoin',
+//       decimals: 18,
+//       is_fiat: false,
+//       rate_btc: 0,
+//       rate_usd: 0,
+//       rate_mnc: 0,
+//       create_at: '2019-02-02T18:48:46.058Z',
+//       update_at: '2019-02-02T18:48:46.058Z',
+//       receive_fee: 0,
+//       send_fee: 0,
+//       status: 0,
+//       confirms: 12,
+//       capabilities_payments: true,
+//       capabilities_wallet: true,
+//       capabilities_transfers: true,
+//       capabilities_convert: true,
+//       _meta:
+//         '{"eth_erc20":true,"eth_contractAddress":"0xacfbbebe1736e2bea98975220ac5a7fb37825bc9"}',
+//       blockchain: {
+//         id: 3,
+//         key: 'devnet',
+//         name: 'Ethereum Development Network',
+//         client: 'ethereum',
+//         server: 'http://devnet:8545',
+//         height: 0,
+//         min_confirmations: 1,
+//         status: 0,
+//         created_at: '2019-02-02T18:48:46.028Z',
+//         updated_at: '2019-02-02T18:48:46.028Z',
+//         _meta: '{}',
+//       },
+//     },
+//     merchant: {
+//       id: 1,
+//       email: 'admin@maincoin.money',
+//       displayName: 'Maincoin MerchantEntity',
+//       createdAt: '2019-02-02T18:48:46.069Z',
+//       ipn: null,
+//     },
+//     id: 3,
+//     createdAt: '2019-02-03T07:25:09.827Z',
+//     updatedAt: '2019-02-03T07:25:09.827Z',
+//     fee: 0,
+//   },
+//   created_at: '2019-02-03T07:25:09.849Z',
+//   updated_at: '2019-02-03T07:25:09.849Z',
+//   status: 'pending',
+//   paid: '0',
+//   confirmation_block: 0,
+// };
 export class CreateTransactionResponse {
   @ApiModelProperty({
     description: 'The amount for the buyer to send in the destination currency',

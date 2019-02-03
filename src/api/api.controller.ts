@@ -282,7 +282,6 @@ export class ApiController {
   @ApiForbiddenResponse(apiSchema.getBasicInfo.forbidden || defaultForbidden)
   @ApiBadRequestResponse(apiSchema.getBasicInfo.badRequest || defaultBadRequest)
   @ApiImplicitHeaders(apiSchema.getBasicInfo.headers || defaultHeaders)
-  @ApiImplicitBody(implicitBody(GetBaseInfoRequest))
   @Post('/basic_info')
   async getBasicInfo(
     @Body() dto: GetBaseInfoRequest,
@@ -297,7 +296,6 @@ export class ApiController {
   @ApiForbiddenResponse(apiSchema.getNonce.forbidden || defaultForbidden)
   @ApiBadRequestResponse(apiSchema.getNonce.badRequest || defaultBadRequest)
   @ApiImplicitHeaders(apiSchema.getNonce.headers || defaultHeaders)
-  @ApiImplicitBody(implicitBody(GetNonceRequest))
   @Post('/get_nonce')
   async getNonce(@Body() dto: GetNonceRequest, @Request() r: HttpRequest) {
     console.log('getting nonce');
@@ -314,7 +312,6 @@ export class ApiController {
     apiSchema.createTransaction.badRequest || defaultBadRequest,
   )
   @ApiImplicitHeaders(apiSchema.createTransaction.headers || defaultHeaders)
-  @ApiImplicitBody(implicitBody(CreateTransactionRequest))
   @Post('/create_transaction')
   async createTransaction(
     @Body() dto: CreateTransactionRequest,
@@ -333,7 +330,6 @@ export class ApiController {
     apiSchema.getTransactionInfo.badRequest || defaultBadRequest,
   )
   @ApiImplicitHeaders(apiSchema.getTransactionInfo.headers || defaultHeaders)
-  @ApiImplicitBody(implicitBody(GetTransactionInfoRequest))
   @Post('/tx_info')
   async getTransactionInfo(
     @Body() dto: GetTransactionInfoRequest,
@@ -352,7 +348,6 @@ export class ApiController {
     apiSchema.getTransactionsList.badRequest || defaultBadRequest,
   )
   @ApiImplicitHeaders(apiSchema.getTransactionsList.headers || defaultHeaders)
-  @ApiImplicitBody(implicitBody(GetTransactionsListRequest))
   @Post('/txs')
   async getTransactionsList(
     @Body() dto: GetTransactionsListRequest,
@@ -367,7 +362,7 @@ export class ApiController {
   // @ApiForbiddenResponse(apiSchema.getRates.forbidden || defaultForbidden)
   // @ApiBadRequestResponse(apiSchema.getRates.badRequest || defaultBadRequest)
   // @ApiImplicitHeaders(apiSchema.getRates.headers || defaultHeaders)
-  // @ApiImplicitBody(implicitBody(GetRatesRequest))
+  //
   // @Post('/rates')
   // async getRates(@Body() dto: GetRatesRequest): Promise<GetRatesResponse> {
   //   return null;
@@ -379,7 +374,7 @@ export class ApiController {
   // @ApiForbiddenResponse(apiSchema.getBalances.forbidden || defaultForbidden)
   // @ApiBadRequestResponse(apiSchema.getBalances.badRequest || defaultBadRequest)
   // @ApiImplicitHeaders(apiSchema.getBalances.headers || defaultHeaders)
-  // @ApiImplicitBody(implicitBody(GetBalancesRequest))
+  //
   // @Post('/balances')
   // async getBalances(
   //   @Body() dto: GetBalancesRequest,
@@ -396,7 +391,7 @@ export class ApiController {
   //   apiSchema.getDepositAddress.badRequest || defaultBadRequest,
   // )
   // @ApiImplicitHeaders(apiSchema.getDepositAddress.headers || defaultHeaders)
-  // @ApiImplicitBody(implicitBody(GetDepositAddressRequest))
+  //
   // @Post('/deposit_address')
   // async getDepositAddress(
   //   @Body() dto: GetDepositAddressRequest,
@@ -413,7 +408,7 @@ export class ApiController {
   //   apiSchema.getCallbackAddress.badRequest || defaultBadRequest,
   // )
   // @ApiImplicitHeaders(apiSchema.getCallbackAddress.headers || defaultHeaders)
-  // @ApiImplicitBody(implicitBody(CallbackAddressRequest))
+  //
   // @Post('/callback_address')
   // async getCallbackAddress(
   //   @Body() dto: CallbackAddressRequest,
@@ -430,7 +425,7 @@ export class ApiController {
   //   apiSchema.getTransactionsInfo.badRequest || defaultBadRequest,
   // )
   // @ApiImplicitHeaders(apiSchema.getTransactionsInfo.headers || defaultHeaders)
-  // @ApiImplicitBody(implicitBody(GetTransactionInfoRequest))
+  //
   // @Post('/txs_info')
   // async getTransactionsInfo(
   //   @Body() dto: GetTransactionsInfoRequest,
@@ -447,7 +442,7 @@ export class ApiController {
   //   apiSchema.createTransfer.badRequest || defaultBadRequest,
   // )
   // @ApiImplicitHeaders(apiSchema.createTransfer.headers || defaultHeaders)
-  // @ApiImplicitBody(implicitBody(CreateTransferRequest))
+  //
   // @Post('/create_transfer')
   // async createTransfer(
   //   @Body() dto: CreateTransferRequest,
@@ -464,7 +459,7 @@ export class ApiController {
   //   apiSchema.createWithdrawal.badRequest || defaultBadRequest,
   // )
   // @ApiImplicitHeaders(apiSchema.createWithdrawal.headers || defaultHeaders)
-  // @ApiImplicitBody(implicitBody(CreateWithdrawalRequest))
+  //
   // @Post('/create_withdrawal')
   // async createWithdrawal(
   //   @Body() dto: CreateWithdrawalRequest,
@@ -481,7 +476,7 @@ export class ApiController {
   //   apiSchema.createWithdrawalBulk.badRequest || defaultBadRequest,
   // )
   // @ApiImplicitHeaders(apiSchema.createWithdrawalBulk.headers || defaultHeaders)
-  // @ApiImplicitBody(implicitBody(CreateWithdrawalBulkRequest))
+  //
   // @Post('/create_withdrawals')
   // async createWithdrawalBulk(
   //   @Body() dto: CreateWithdrawalBulkRequest,
@@ -498,7 +493,7 @@ export class ApiController {
   //   apiSchema.getWithdrawalHistory.badRequest || defaultBadRequest,
   // )
   // @ApiImplicitHeaders(apiSchema.getWithdrawalHistory.headers || defaultHeaders)
-  // @ApiImplicitBody(implicitBody(GetWithdrawalHistoryRequest))
+  //
   // @Post('/withdrawal_history')
   // async getWithdrawalHistory(
   //   @Body() dto: GetWithdrawalHistoryRequest,
@@ -515,7 +510,7 @@ export class ApiController {
   //   apiSchema.getWithdrawalInfo.badRequest || defaultBadRequest,
   // )
   // @ApiImplicitHeaders(apiSchema.getWithdrawalInfo.headers || defaultHeaders)
-  // @ApiImplicitBody(implicitBody(GetWithdrawalInfoRequest))
+  //
   // @Post('/withdrawal_info')
   // async getWithdrawalInfo(
   //   @Body() dto: GetWithdrawalInfoRequest,

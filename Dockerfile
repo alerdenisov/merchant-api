@@ -6,4 +6,5 @@ COPY package.json .
 RUN yarn
 COPY . .
 RUN chmod +x dev-run.sh
+RUN chmod +x run.sh
 CMD yarn start:prod

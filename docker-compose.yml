@@ -25,8 +25,6 @@ services:
       - 6379
     environment:
       ALLOW_EMPTY_PASSWORD: 'yes'
-    volumes:
-      - ./tmp/redis:/bitnami/redis/data
 
   devnet:
     image: smartcontract/devnet
@@ -63,7 +61,7 @@ services:
     labels:
       traefik.enable: true
       traefik.frontend.rule: 'Host: mapi.maincoin.money'
-      traefik.port: 9000
+      traefik.port: 4000
 
   merchant:
     image: alerdenisov/app:latest

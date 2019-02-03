@@ -32,8 +32,8 @@ services:
     image: smartcontract/devnet
     hostname: devnet
     ports:
-      - 9545:8545
-      - 9546:8546
+      - 7545:8545
+      - 7546:8546
     expose:
       - 8545
     command: --config /devnet/miner.toml --force-sealing

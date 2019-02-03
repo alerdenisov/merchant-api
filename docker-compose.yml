@@ -15,6 +15,8 @@ services:
       MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD:-password}
     expose:
       - '3306'
+    volumes:
+      - ./tmp/mysql:/var/lib/mysql
 
   redis:
     image: bitnami/redis:latest
@@ -25,6 +27,20 @@ services:
       ALLOW_EMPTY_PASSWORD: 'yes'
     volumes:
       - ./tmp/redis:/bitnami/redis/data
+
+  devnet:
+    image: smartcontract/devnet
+    hostname: devnet
+    ports:
+      - 8545:8545
+      - 8546:8546
+    command: --config /devnet/miner.toml --force-sealing
+    volumes:
+      - ./tmp/devnet:/devnet/data/miner
+    labels:
+      traefik.enable: true
+      traefik.frontend.rule: 'Host: devnet.maincoin.money'
+      traefik.port: 8545
 
   api:
     image: alerdenisov/app:latest

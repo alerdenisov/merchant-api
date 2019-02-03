@@ -32,7 +32,6 @@ export class BlockchainDemon {
     this.lastBlock = 0;
     this.waitForRun(() => {
       this.runLastBlockJob();
-      // this.runCallbackJob();
     });
   }
 

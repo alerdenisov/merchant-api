@@ -1,6 +1,6 @@
 version: '2.1'
 services:
-  db:
+  mysql:
     image: mysql/mysql-server:5.7
     restart: always
     hostname: db
@@ -15,30 +15,93 @@ services:
       MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD:-password}
     expose:
       - '3306'
-    healthcheck:
-      test: echo "mysql --protocol=socket -hlocalhost -uroot -p${MYSQL_ROOT_PASSWORD:-password} -e 'SELECT 1'"
-      interval: 10s
-      timeout: 10s
-      retries: 10
+
+  redis:
+    image: bitnami/redis:latest
+    hostname: redis
+    expose:
+      - 6379
+    environment:
+      ALLOW_EMPTY_PASSWORD: 'yes'
+    volumes:
+      - ./tmp/redis:/bitnami/redis/data
 
   api:
-    image: app
-    hostname: api
-    container_name: merchant_api
+    image: alerdenisov/app:latest
+    depends_on:
+      - mysql
+      - redis
+    volumes:
+      - ./src:/usr/src/app/src
     build:
       context: .
-    depends_on:
-      db:
-        condition: service_healthy
     environment:
-      DATABASE_HOST: db
-      PORT: 9000
-    links:
-      - db
+      PORT: 4000
+      DATABASE_HOST: mysql
+      REDIS_URL: redis://redis:6379
+    ports:
+      - 4000:4000
+    command: /bin/sh run.sh api
     labels:
       traefik.enable: true
       traefik.frontend.rule: 'Host: mapi.maincoin.money'
       traefik.port: 9000
+
+  merchant:
+    image: alerdenisov/app:latest
+    depends_on:
+      - mysql
+      - redis
+    volumes:
+      - ./src:/usr/src/app/src
+    build:
+      context: .
+    environment:
+      DATABASE_HOST: mysql
+      REDIS_URL: redis://redis:6379
+    command: /bin/sh run.sh merchant
+
+  notification:
+    image: alerdenisov/app:latest
+    depends_on:
+      - mysql
+      - redis
+    volumes:
+      - ./src:/usr/src/app/src
+    build:
+      context: .
+    environment:
+      DATABASE_HOST: mysql
+      REDIS_URL: redis://redis:6379
+    command: /bin/sh run.sh devnet notification
+
+  devnet-service:
+    image: alerdenisov/app:latest
+    depends_on:
+      - mysql
+      - redis
+    volumes:
+      - ./src:/usr/src/app/src
+    build:
+      context: .
+    environment:
+      DATABASE_HOST: mysql
+      REDIS_URL: redis://redis:6379
+    command: /bin/sh run.sh devnet blockchain
+
+  ethereum-service:
+    image: alerdenisov/app:latest
+    depends_on:
+      - mysql
+      - redis
+    volumes:
+      - ./src:/usr/src/app/src
+    build:
+      context: .
+    environment:
+      DATABASE_HOST: mysql
+      REDIS_URL: redis://redis:6379
+    command: /bin/sh run.sh ethereum blockchain
 
   proxy:
     image: traefik

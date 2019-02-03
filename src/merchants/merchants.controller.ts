@@ -70,7 +70,7 @@ export class MerchantsController {
     await this.service.updateNonce(key, nonce);
   }
   @MessagePattern({ service: 'merchant', cmd: 'validateSignature' })
-  async validate({
+  async validateSignature({
     key,
     signature,
     payload,
@@ -86,10 +86,16 @@ export class MerchantsController {
       .update(query)
       .digest('hex');
 
+    console.log('hmac and query', query, hmac);
+
     if (signature === 'MAGICSIG') {
       throw hmac;
     }
 
-    return hmac === signature;
+    if (hmac === signature) {
+      return true;
+    } else {
+      throw new Error('Incorrect signature');
+    }
   }
 }

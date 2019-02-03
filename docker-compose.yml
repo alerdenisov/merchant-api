@@ -133,6 +133,7 @@ services:
         aliases:
           - merchant.maincoin.money
           - mapi.maincoin.money
+          - devnet.maincoin.money
     labels:
       traefik.enable: true
       traefik.frontend.rule: 'Host: merchant.maincoin.money'

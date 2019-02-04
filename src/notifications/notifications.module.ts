@@ -58,6 +58,7 @@ export class NotificationDemon {
         })
         .catch(({ err, response }) => {
           console.log('Notification failed');
+          console.log(err)
           return this.notificationRepository.update(
             {
               id: notification.id,

@@ -32,6 +32,7 @@ export class NotificationDemon {
         request.post(
           notification.invoice.ipn,
           {
+            strictSSL: false,
             json: {
               notification,
               invoice: notification.invoice,

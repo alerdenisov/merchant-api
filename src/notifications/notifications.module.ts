@@ -15,6 +15,7 @@ export class NotificationDemon {
     @InjectRepository(NotificationRepository)
     private readonly notificationRepository: NotificationRepository,
   ) {
+    require('https').globalAgent.options.ca = require('ssl-root-cas/latest').create();
     this.runCallbackJob();
   }
 
@@ -58,7 +59,7 @@ export class NotificationDemon {
         })
         .catch(({ err, response }) => {
           console.log('Notification failed');
-          console.log(err)
+          console.log(err);
           return this.notificationRepository.update(
             {
               id: notification.id,

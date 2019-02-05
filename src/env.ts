@@ -31,6 +31,7 @@ export async function setupEnvironment() {
       MICROSERVICES_RETRY_DELAYS: joi.number().default(3000),
 
       REDIS_URL: joi.string().default('redis://redis'),
+      SECRET: joi.string().required(),
     },
     {
       stripUnknown: true,

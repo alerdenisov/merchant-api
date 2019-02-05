@@ -8,6 +8,7 @@ import {
 import { InvoiceEntity, InvoiceRepository } from 'entities/invoice.entity';
 import { ApiKeyEntity, ApiKeyRepository } from 'entities/api_keys.entity';
 import * as request from 'request';
+import * as crypto from 'crypto';
 
 @Injectable()
 export class NotificationDemon {
@@ -28,18 +29,24 @@ export class NotificationDemon {
     console.log(`Found ${notifications.length} pending notifications`);
     for (let notification of notifications) {
       console.log(`Sending notification to ${notification.invoice.ipn}`);
+      const body = JSON.stringify(notification);
+      const signature = crypto
+        .createHmac('sha256', process.env.SECRET)
+        .update(body)
+        .digest('hex');
+
       await new Promise((resolve, reject) =>
         request.post(
           notification.invoice.ipn,
           {
             strictSSL: false,
-            json: {
-              notification,
-              invoice: notification.invoice,
+            body,
+            headers: {
+              signature,
             },
           },
           (err, response) => {
-            if (err || response.statusCode !== 200) {
+            if (err || ![200, 201].includes(response.statusCode)) {
               return reject({ err, response });
             }
 
@@ -60,7 +67,8 @@ export class NotificationDemon {
         })
         .catch(({ err, response }) => {
           console.log('Notification failed');
-          console.log(err);
+          console.log(err, response.statusCode);
+
           return this.notificationRepository.update(
             {
               id: notification.id,

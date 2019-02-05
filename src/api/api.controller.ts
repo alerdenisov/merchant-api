@@ -6,6 +6,7 @@ import {
   UseGuards,
   Request,
   CanActivate,
+  UseInterceptors,
 } from '@nestjs/common';
 import { ApiService } from 'api/api.service';
 import {
@@ -52,6 +53,9 @@ import { SignedRequestGuard } from 'merchants/signed-request.guard';
 import { MerchantGuard } from 'merchants/merchant.guard';
 import { Request as HttpRequest } from 'express';
 import { NonceRequestGuard } from 'merchants/request-nonce.guard';
+import { stringify } from 'querystring';
+import * as crypto from 'crypto';
+import * as rawbody from 'raw-body';
 
 interface MethodOperationMeta {
   title: string;
@@ -267,12 +271,49 @@ function implicitBody<TRequest>(func: new () => TRequest) {
 @Controller('api')
 export class ApiController {
   constructor(private readonly apiService: ApiService) {}
+  @Get('/test')
+  async test() {
+    return stringify({
+      text: 'Привет мир и world! ®†',
+      nested: {
+        field: 5,
+        array: [1, 'foo', { obj: 1 }],
+      },
+      num: 5,
+    });
+  }
 
   @Post('/notify')
-  async notify(@Request() r: HttpRequest) {
+  async notify(@Request() r: HttpRequest, @Body() body: any) {
     console.log('NOTIFICATION!!:');
-    console.log(r.originalUrl);
-    console.log(r.body);
+    if (r.readable) {
+      // body is ignored by NestJS -> get raw body from request
+      const raw = await rawbody(r);
+      const text = raw.toString().trim();
+      const signature = crypto
+        .createHmac('sha256', process.env.SECRET)
+        .update(text)
+        .digest('hex');
+
+      const providedSignature = r.headers['signature'];
+      if (providedSignature === signature) {
+        return true;
+      } else {
+        throw new Error('incorrect signature');
+      }
+    } else {
+      throw new Error('data isnt readable');
+      // body is parsed by NestJS
+      console.log('data:', body);
+    }
+    // console.log(r.originalUrl);
+    // console.log((<any>r).rawBody);
+    // console.log(r.body);
+    // console.log(r.headers['hmac']);
+    // const raw = JSON.stringify(body);
+    // console.log(raw);
+    // console.log(body);
+    return true;
   }
 
   // Info

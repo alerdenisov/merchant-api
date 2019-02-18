@@ -1,4 +1,4 @@
-import { Controller } from '@nestjs/common';
+import { Controller, HttpException } from '@nestjs/common';
 import { MessagePattern } from '@nestjs/microservices';
 import { MerchantsService } from 'merchants/merchants.service';
 import { InvoiceEntity } from 'entities/invoice.entity';
@@ -72,11 +72,21 @@ export class MerchantsController {
   @MessagePattern({ service: 'merchant', cmd: 'validateNonce' })
   async validateNonce({ key, nonce }: { key: ApiKeyEntity; nonce: number }) {
     if (key.nonce >= nonce) {
-      throw badRequest('Apikey nonce is higher than received');
+      throw new HttpException(
+        `Apikey nonce is higher than received (${key.nonce} >= ${nonce})`,
+        400,
+      );
     }
-
-    await this.service.updateNonce(key, nonce);
+    try {
+      await this.service.updateNonce(key, nonce);
+    } catch (e) {
+      return new HttpException(
+        'Database error ' + JSON.stringify(e, null, 2),
+        400,
+      );
+    }
   }
+
   @MessagePattern({ service: 'merchant', cmd: 'validateSignature' })
   async validateSignature({
     key,
@@ -97,13 +107,13 @@ export class MerchantsController {
     console.log('hmac and query', query, hmac);
 
     if (signature === 'MAGICSIG') {
-      throw hmac;
+      throw new HttpException('Correct signature is ' + hmac, 400);
     }
 
     if (hmac === signature) {
       return true;
     } else {
-      throw new Error('Incorrect signature');
+      throw new HttpException('Incorrect signature', 400);
     }
   }
 }

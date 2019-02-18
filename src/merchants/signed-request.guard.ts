@@ -48,7 +48,10 @@ export class SignedRequestGuard implements CanActivate {
 
       return true;
     } catch (e) {
-      throw new HttpException('Signature validation failed', 403);
+      throw new HttpException(
+        'Signature validation failed \n' + JSON.stringify(e, null, 2),
+        403,
+      );
     }
   }
 }

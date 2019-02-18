@@ -46,7 +46,10 @@ export class NonceRequestGuard implements CanActivate {
         .toPromise();
       return true;
     } catch (e) {
-      throw new HttpException('Nonce validation failed', 403);
+      throw new HttpException(
+        'Nonce validation failed \n' + JSON.stringify(e, null, 2),
+        403,
+      );
     }
   }
 }

@@ -60,7 +60,10 @@ export class MerchantGuard implements CanActivate {
       request.merchantKey = apikey;
       return true;
     } catch (e) {
-      throw new HttpException('Merchant error', 403);
+      throw new HttpException(
+        'Merchant error \n' + JSON.stringify(e, null, 2),
+        403,
+      );
     }
   }
 }

@@ -99,8 +99,8 @@ const defaultHeaders = [
 ];
 const defaultGuards: Array<Function | CanActivate> = [
   MerchantGuard,
-  NonceRequestGuard,
   SignedRequestGuard,
+  NonceRequestGuard,
 ];
 
 const apiSchema: { [method in methods]?: MethodSchema } = {

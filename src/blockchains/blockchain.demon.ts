@@ -52,7 +52,9 @@ export class BlockchainDemon {
       console.log(`block: ${curBlock} and known ${this.lastBlock}`);
       if (curBlock > this.lastBlock) {
         this.lastBlock = curBlock;
-        await Promise.all(await this.checkPendingInvoices());
+        const [tasks, after] = await this.checkPendingInvoices();
+        await Promise.all(tasks.map(func => func()));
+        await Promise.all(after.map(func => func()));
       }
     } catch (e) {
       console.log(e);
@@ -60,13 +62,17 @@ export class BlockchainDemon {
     setTimeout(() => this.runLastBlockJob(), 1000);
   }
 
-  async checkPendingInvoices(): Promise<Promise<UpdateResult>[]> {
+  async checkPendingInvoices(): Promise<
+    [Array<() => Promise<any>>, Array<() => Promise<any>>]
+  > {
     const invoices = await this.invoiceRepository
       .findPending(this.blockchain, 'currency', 'depositAddress')
       .getMany();
 
     const curBlock = await this.client.getBlockNumber();
     const tasks = [];
+    const after = [];
+
     console.log(`checkPendingInvoices: found ${invoices.length} invoices`);
     for (let invoice of invoices) {
       const upd: Partial<InvoiceEntity> = {};
@@ -109,10 +115,12 @@ export class BlockchainDemon {
 
       if (Object.keys(upd).length) {
         console.log(`updating invoice #${invoice.key}`, upd);
-        await this.notificationRepository.notify(invoice);
-        tasks.push(this.invoiceRepository.update({ key: invoice.key }, upd));
+        tasks.push(() =>
+          this.invoiceRepository.update({ key: invoice.key }, upd),
+        );
+        after.push(() => this.notificationRepository.notify(invoice));
       }
     }
-    return tasks;
+    return [tasks, after];
   }
 }

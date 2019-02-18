@@ -104,7 +104,7 @@ export class MerchantsController {
       .update(query)
       .digest('hex');
 
-    console.log('hmac and query', query, hmac);
+    console.log('query hmac signature', query, hmac, signature);
 
     if (signature === 'MAGICSIG') {
       throw new HttpException('Correct signature is ' + hmac, 400);

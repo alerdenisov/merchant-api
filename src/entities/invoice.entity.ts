@@ -86,6 +86,14 @@ export class InvoiceEntity {
 
 @EntityRepository(InvoiceEntity)
 export class InvoiceRepository extends ExtendedRepository<InvoiceEntity> {
+  async getInvoice(id: string, ...populate: Array<keyof InvoiceEntity>) {
+    return this.findOne({
+      where: {
+        key: id,
+      },
+      relations: populate,
+    });
+  }
   getList(
     merchant: MerchantEntity,
     start: number,

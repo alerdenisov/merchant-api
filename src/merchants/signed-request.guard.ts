@@ -1,4 +1,9 @@
-import { Injectable, CanActivate, ExecutionContext } from '@nestjs/common';
+import {
+  Injectable,
+  CanActivate,
+  ExecutionContext,
+  HttpException,
+} from '@nestjs/common';
 import {
   Client,
   Transport,
@@ -23,25 +28,27 @@ export class SignedRequestGuard implements CanActivate {
   }
 
   async canActivate(context: ExecutionContext): Promise<boolean> {
-    const request = context.switchToHttp().getRequest() as any;
-    return this.client
-      .connect()
-      .then(() =>
-        this.client
-          .send(
-            {
-              service: 'merchant',
-              cmd: 'validateSignature',
-            },
-            {
-              key: request.merchantKey,
-              signature: request.headers['hmac'],
-              payload: request.body,
-            },
-          )
-          .toPromise(),
-      )
-      .then(() => true)
-      .catch(e => false);
+    try {
+      const request = context.switchToHttp().getRequest() as any;
+      await this.client.connect();
+
+      await this.client
+        .send(
+          {
+            service: 'merchant',
+            cmd: 'validateSignature',
+          },
+          {
+            key: request.merchantKey,
+            signature: request.headers['hmac'],
+            payload: request.body,
+          },
+        )
+        .toPromise();
+
+      return true;
+    } catch (e) {
+      throw new HttpException('Signature validation failed', 403);
+    }
   }
 }

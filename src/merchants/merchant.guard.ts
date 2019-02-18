@@ -4,6 +4,7 @@ import {
   MiddlewareFunction,
   CanActivate,
   ExecutionContext,
+  HttpException,
 } from '@nestjs/common';
 import { Request, Response } from 'express';
 import {
@@ -13,6 +14,8 @@ import {
   Client,
 } from '@nestjs/microservices';
 import { notFound } from 'boom';
+import { MerchantEntity } from 'entities/merchant.entity';
+import { ApiKeyEntity } from 'entities/api_keys.entity';
 
 @Injectable()
 export class MerchantGuard implements CanActivate {
@@ -30,33 +33,34 @@ export class MerchantGuard implements CanActivate {
   }
 
   async canActivate(context: ExecutionContext): Promise<boolean> {
-    const request = context.switchToHttp().getRequest() as any;
+    try {
+      const request = context.switchToHttp().getRequest() as any;
 
-    return this.client
-      .connect()
-      .then(() =>
-        this.client
-          .send(
-            {
-              service: 'merchant',
-              cmd: 'getMerchant',
-            },
-            {
-              public_key: request.body.key,
-            },
-          )
-          .toPromise(),
-      )
-      .then(([merchant, apikey]) => {
-        if (!merchant || !apikey) {
-          throw notFound('Merchant or api key not found');
-        }
-        request.merchant = merchant;
-        request.merchantKey = apikey;
-        return true;
-      })
-      .catch(e => {
-        return false;
-      });
+      await this.client.connect();
+      const [merchant, apikey]: [
+        MerchantEntity,
+        ApiKeyEntity
+      ] = await this.client
+        .send(
+          {
+            service: 'merchant',
+            cmd: 'getMerchant',
+          },
+          {
+            public_key: request.body.key,
+          },
+        )
+        .toPromise();
+
+      if (!merchant || !apikey) {
+        throw notFound('Merchant or api key not found');
+      }
+
+      request.merchant = merchant;
+      request.merchantKey = apikey;
+      return true;
+    } catch (e) {
+      throw new HttpException('Merchant error', 403);
+    }
   }
 }

@@ -141,4 +141,15 @@ export class MerchantsService {
       )
       .getMany();
   }
+  async getInvoice(id: string, populate: boolean) {
+    if (populate) {
+      return this.invoiceRepository.getInvoice(
+        id,
+        'depositAddress',
+        'currency',
+      );
+    } else {
+      return this.invoiceRepository.getInvoice(id);
+    }
+  }
 }

@@ -1,11 +1,16 @@
-import { Injectable, CanActivate, ExecutionContext } from '@nestjs/common';
+import {
+  Injectable,
+  CanActivate,
+  ExecutionContext,
+  HttpException,
+} from '@nestjs/common';
 import {
   Client,
   Transport,
   ClientProxy,
   ClientProxyFactory,
 } from '@nestjs/microservices';
-import { Request } from 'express';
+import { Request, Response } from 'express';
 
 @Injectable()
 export class NonceRequestGuard implements CanActivate {
@@ -25,23 +30,23 @@ export class NonceRequestGuard implements CanActivate {
   async canActivate(context: ExecutionContext): Promise<boolean> {
     const request = context.switchToHttp().getRequest() as any;
 
-    return this.client
-      .connect()
-      .then(() =>
-        this.client
-          .send(
-            {
-              service: 'merchant',
-              cmd: 'validateNonce',
-            },
-            {
-              key: request.merchantKey,
-              nonce: request.body.nonce,
-            },
-          )
-          .toPromise(),
-      )
-      .then(() => true)
-      .catch(e => false);
+    try {
+      await this.client.connect();
+      await this.client
+        .send(
+          {
+            service: 'merchant',
+            cmd: 'validateNonce',
+          },
+          {
+            key: request.merchantKey,
+            nonce: request.body.nonce,
+          },
+        )
+        .toPromise();
+      return true;
+    } catch (e) {
+      throw new HttpException('Nonce validation failed', 403);
+    }
   }
 }

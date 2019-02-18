@@ -17,7 +17,9 @@ export class MerchantsController {
   }
 
   @MessagePattern({ service: 'merchant', cmd: 'getInvoice' })
-  async getInvoice({ id, populate }: { id: string; populate: boolean }) {}
+  async getInvoice({ id, populate }: { id: string; populate: boolean }) {
+    return this.service.getInvoice(id, populate);
+  }
 
   @MessagePattern({ service: 'merchant', cmd: 'getInvoices' })
   async getInvoices({
@@ -57,7 +59,13 @@ export class MerchantsController {
   @MessagePattern({ service: 'merchant', cmd: 'getMerchant' })
   async getMerchant({ public_key }: { public_key: string }) {
     const key = await this.service.findKey(public_key);
+    if (!key) {
+      throw new Error('Key not found');
+    }
     const merchant = await this.service.findByKey(public_key);
+    if (!merchant) {
+      throw new Error('Merchant not found');
+    }
     return [merchant, key];
   }
 
